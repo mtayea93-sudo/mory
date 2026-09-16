@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم — رواية موري</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/jpeg" href="mory-cover.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* تنسيقات خاصة بلوحة التحكم */
+        body { background: var(--navy-deep); }
+
+        .gate {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .gate[hidden] { display: none; }
+
+        .gate-box {
+            background: var(--navy);
+            border: 1px solid rgba(175, 145, 95, .45);
+            padding: 48px 40px;
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+            box-shadow: 0 30px 90px rgba(0, 0, 0, .6);
+        }
+
+        .gate-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 3.2rem;
+            color: var(--amber);
+            line-height: 1.4;
+        }
+
+        .gate-box p {
+            color: var(--ink-dim);
+            margin-bottom: 26px;
+            font-size: .98rem;
+        }
+
+        .gate-box input {
+            width: 100%;
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            padding: 13px 16px;
+            margin-bottom: 16px;
+            background: rgba(246, 239, 224, .06);
+            border: 1px solid rgba(175, 145, 95, .4);
+            color: var(--ink);
+            text-align: center;
+        }
+
+        .gate-box input:focus {
+            outline: none;
+            border-color: var(--gold-bright);
+        }
+
+        .gate-msg {
+            color: #ff9d9d;
+            min-height: 1.6em;
+            margin-top: 12px;
+            margin-bottom: 0;
+            font-size: .92rem;
+        }
+
+        .adm-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px 80px;
+        }
+
+        .adm-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            padding: 18px 0 26px;
+            border-bottom: 1px solid rgba(175, 145, 95, .25);
+            margin-bottom: 34px;
+        }
+
+        .adm-head h1 {
+            font-family: var(--font-head);
+            font-size: 1.7rem;
+            color: var(--cream);
+        }
+
+        .btn-sm {
+            padding: 9px 22px;
+            font-size: .95rem;
+        }
+
+        .adm-card {
+            background: var(--navy);
+            border: 1px solid rgba(175, 145, 95, .3);
+            padding: 34px 30px;
+            margin-bottom: 30px;
+        }
+
+        .adm-card h2 {
+            font-family: var(--font-head);
+            color: var(--amber);
+            font-size: 1.5rem;
+            margin-bottom: 24px;
+        }
+
+        .adm-card h3 {
+            font-family: var(--font-head);
+            color: var(--cream);
+            font-size: 1.15rem;
+            margin: 30px 0 14px;
+        }
+
+        .adm-note {
+            background: rgba(214, 153, 0, .08);
+            border: 1px solid rgba(214, 153, 0, .3);
+            padding: 14px 18px;
+            color: var(--ink-dim);
+            font-size: .92rem;
+            margin: 18px 0;
+        }
+
+        .adm-note a { color: var(--gold-bright); }
+
+        /* الإحصائيات */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 14px;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            background: var(--navy-deep);
+            border: 1px solid rgba(175, 145, 95, .25);
+            padding: 18px 12px;
+            text-align: center;
+        }
+
+        .stat-num {
+            font-family: var(--font-display);
+            font-size: 2.4rem;
+            color: var(--amber);
+            line-height: 1.3;
+        }
+
+        .stat-name {
+            color: var(--ink-dim);
+            font-size: .88rem;
+        }
+
+        .stat-rate {
+            margin-top: 4px;
+            color: #4bd598;
+            font-size: .82rem;
+            font-weight: 600;
+        }
+
+        .bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 6px;
+            height: 120px;
+            padding: 10px 4px 0;
+            border-bottom: 1px solid rgba(175, 145, 95, .3);
+            direction: ltr;
+        }
+
+        .bar-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100%;
+            gap: 4px;
+        }
+
+        .bar {
+            width: 100%;
+            max-width: 34px;
+            background: linear-gradient(to top, var(--gold), var(--amber));
+            min-height: 3px;
+            transition: height .6s var(--ease-cine);
+        }
+
+        .bar-day {
+            font-size: .68rem;
+            color: #8d8574;
+            direction: rtl;
+        }
+
+        /* نماذج الإدارة */
+        .field-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .field-row label {
+            color: var(--cream);
+            min-width: 130px;
+            font-size: .98rem;
+        }
+
+        .field-row input[type="number"],
+        .field-row input[type="text"] {
+            font-family: var(--font-body);
+            font-size: 1.05rem;
+            padding: 11px 14px;
+            width: 180px;
+            background: rgba(246, 239, 224, .06);
+            border: 1px solid rgba(175, 145, 95, .4);
+            color: var(--ink);
+        }
+
+        .field-row input:focus {
+            outline: none;
+            border-color: var(--gold-bright);
+        }
+
+        .unit { color: var(--ink-dim); }
+
+        .check-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0 20px;
+            color: var(--ink);
+            cursor: pointer;
+        }
+
+        .check-row input {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--amber);
+            cursor: pointer;
+        }
+
+        .file-box {
+            background: var(--navy-deep);
+            border: 1px dashed rgba(175, 145, 95, .4);
+            padding: 20px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .file-box img {
+            width: 90px;
+            height: 130px;
+            object-fit: cover;
+            border: 1px solid rgba(175, 145, 95, .4);
+            background: #0a1220;
+        }
+
+        .file-info { flex: 1; min-width: 200px; }
+
+        .file-name {
+            color: var(--cream);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .file-status {
+            color: var(--ink-dim);
+            font-size: .9rem;
+            margin-bottom: 12px;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .mini-btn {
+            font-family: var(--font-body);
+            font-size: .88rem;
+            padding: 8px 16px;
+            border: 1px solid rgba(175, 145, 95, .45);
+            background: transparent;
+            color: var(--gold-bright);
+            cursor: pointer;
+            transition: all .25s;
+        }
+
+        .mini-btn:hover {
+            background: rgba(214, 153, 0, .12);
+            color: var(--cream);
+        }
+
+        .mini-btn.danger {
+            border-color: rgba(255, 120, 120, .4);
+            color: #ff9d9d;
+        }
+
+        .mini-btn.danger:hover {
+            background: rgba(255, 120, 120, .1);
+            color: #ffc9c9;
+        }
+
+        input[type="file"].adm-file {
+            display: none;
+        }
+
+        .save-row {
+            margin-top: 26px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .save-msg {
+            color: #4bd598;
+            font-weight: 600;
+        }
+
+        .steps {
+            list-style: none;
+            counter-reset: st;
+        }
+
+        .steps li {
+            counter-increment: st;
+            padding: 10px 0;
+            color: var(--ink-dim);
+            border-bottom: 1px solid rgba(175, 145, 95, .15);
+            font-size: .98rem;
+        }
+
+        .steps li::before {
+            content: counter(st);
+            display: inline-block;
+            width: 26px;
+            height: 26px;
+            line-height: 26px;
+            text-align: center;
+            background: rgba(214, 153, 0, .15);
+            color: var(--amber);
+            font-weight: 700;
+            margin-inline-end: 12px;
+            font-size: .88rem;
+        }
+
+        .steps li:last-child { border-bottom: none; }
+
+        .steps code {
+            background: rgba(246, 239, 224, .08);
+            padding: 1px 8px;
+            color: var(--cream);
+            font-size: .88rem;
+            direction: ltr;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="grain" aria-hidden="true"></div>
+
+    <!-- بوابة الدخول -->
+    <section class="gate" id="gate">
+        <div class="gate-box">
+            <h1 class="gate-title">موري</h1>
+            <p>لوحة تحكم المؤلف — دخول خاص بمحمد طايع</p>
+            <input type="password" id="gatePass" placeholder="كلمة السر" autocomplete="current-password">
+            <button type="button" id="gateBtn" class="btn btn-gold" style="width:100%">دخول</button>
+            <p class="gate-msg" id="gateMsg"></p>
+        </div>
+    </section>
+
+    <!-- اللوحة -->
+    <main class="adm-wrap" id="app" hidden>
+
+        <header class="adm-head">
+            <h1>لوحة تحكم «موري»</h1>
+            <div>
+                <a href="index.html" class="btn btn-ghost btn-sm">مشاهدة الموقع</a>
+                <button type="button" id="logoutBtn" class="btn btn-ghost btn-sm">خروج</button>
+            </div>
+        </header>
+
+        <!-- الإحصائيات -->
+        <section class="adm-card">
+            <h2>الإحصائيات</h2>
+            <div class="stats-grid" id="statsGrid"></div>
+            <h3>الزيارات — آخر 14 يوم</h3>
+            <div class="bars" id="bars"></div>
+            <p class="adm-note">
+                الأرقام دي بتتسجل في متصفح اللي بيفتح الموقع منه.
+                عشان تشوف أرقام <strong>كل الزوار</strong> فعّل خدمة تحليلات مجانية زي
+                <a href="https://www.goatcounter.com" target="_blank" rel="noopener">GoatCounter</a>،
+                وكل عمليات الشراء الحقيقية (ناجحة ولا لأ) موجودة في
+                <a href="https://accept.paymob.com/merchant" target="_blank" rel="noopener">لوحة Paymob</a> —
+                الإحصائيات &gt; التقارير.
+            </p>
+        </section>
+
+        <!-- إدارة الكتاب -->
+        <section class="adm-card">
+            <h2>إدارة الكتاب</h2>
+
+            <div class="field-row">
+                <label for="setPrice1">سعر الجزء الأول</label>
+                <input type="number" id="setPrice1" min="1" step="1">
+                <span class="unit">جنيه</span>
+            </div>
+
+            <h3>الأغلفة</h3>
+
+            <div class="file-box">
+                <img id="frontPreview" src="mory-cover.jpg" alt="الغلاف الأمامي">
+                <div class="file-info">
+                    <p class="file-name">الغلاف الأمامي</p>
+                    <p class="file-status" id="frontStatus">الملف الافتراضي: mory-cover.jpg</p>
+                    <div class="file-actions">
+                        <button type="button" class="mini-btn" id="frontUploadBtn">رفع غلاف جديد</button>
+                        <input type="file" class="adm-file" id="frontFile" accept="image/jpeg,image/png,image/webp">
+                        <button type="button" class="mini-btn" id="frontDl" hidden>تنزيل للرفع على GitHub</button>
+                        <button type="button" class="mini-btn danger" id="frontDel" hidden>إلغاء الرفع المحلي</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="file-box">
+                <img id="backPreview" src="" alt="الغلاف الخلفي">
+                <div class="file-info">
+                    <p class="file-name">الغلاف الخلفي</p>
+                    <p class="file-status" id="backStatus">مفيش غلاف خلفي معروض حالياً</p>
+                    <div class="file-actions">
+                        <button type="button" class="mini-btn" id="backUploadBtn">رفع غلاف خلفي</button>
+                        <input type="file" class="adm-file" id="backFile" accept="image/jpeg,image/png,image/webp">
+                        <button type="button" class="mini-btn" id="backDl" hidden>تنزيل للرفع على GitHub</button>
+                        <button type="button" class="mini-btn danger" id="backDel" hidden>حذف</button>
+                    </div>
+                </div>
+            </div>
+
+            <h3>الجزء التاني</h3>
+
+            <div class="field-row">
+                <label for="p2Title">عنوان الجزء</label>
+                <input type="text" id="p2Title" style="width:280px">
+            </div>
+            <div class="field-row">
+                <label for="p2Price">سعره</label>
+                <input type="number" id="p2Price" min="1" step="1">
+                <span class="unit">جنيه</span>
+            </div>
+            <label class="check-row">
+                <input type="checkbox" id="p2Published">
+                إظهار الجزء التاني في الموقع (بيع مباشر)
+            </label>
+
+            <div class="file-box">
+                <div class="file-info" style="flex:1">
+                    <p class="file-name">ملف الجزء التاني (PDF)</p>
+                    <p class="file-status" id="p2PdfStatus">مفيش ملف مرفوع</p>
+                    <div class="file-actions">
+                        <button type="button" class="mini-btn" id="p2UploadBtn">رفع ملف PDF</button>
+                        <input type="file" class="adm-file" id="p2File" accept="application/pdf">
+                        <button type="button" class="mini-btn" id="p2Dl" hidden>تنزيل للرفع على GitHub</button>
+                        <button type="button" class="mini-btn danger" id="p2Del" hidden>حذف</button>
+                    </div>
+                </div>
+            </div>
+
+            <p class="adm-note">
+                <strong>مهم:</strong> الرفع هنا بيظهر في <em>متصفحك أنت بس</em> فوراً.
+                عشان يظهر لكل الزوار: ارفع الملف هنا، دوس «تنزيل للرفع على GitHub»، وبعدين ارفع الملف النازل
+                في مستودع GitHub بنفس الاسم (<code>mory-cover.jpg</code> / <code>mory-back.jpg</code> / <code>mory2.pdf</code>).
+            </p>
+
+            <div class="save-row">
+                <button type="button" id="saveSettings" class="btn btn-gold">حفظ الإعدادات</button>
+                <button type="button" id="resetSettings" class="btn btn-ghost btn-sm">رجوع للافتراضي</button>
+                <span class="save-msg" id="saveMsg" role="status"></span>
+            </div>
+        </section>
+
+        <!-- تفعيل الدفع -->
+        <section class="adm-card">
+            <h2>تفعيل الدفع الإلكتروني (Paymob)</h2>
+            <ol class="steps">
+                <li>سجّل في <code>paymob.com</code> وأكّد حسابك التجاري.</li>
+                <li>خد <code>API Key</code> من Developers &gt; API Keys.</li>
+                <li>فعّل وسائل الدفع اللي عايزها (كارت / محافظ / إنستا باي / فوري) وخد رقم كل <code>Integration ID</code>.</li>
+                <li>افتح ملف <code>script.js</code> وعبّي القيم في <code>CONFIG.paymob</code>.</li>
+                <li>في إعدادات كل integration حط <code>Redirect URL =</code> رابط موقعك — عشان العميل يرجع لصفحة التحميل بعد الدفع.</li>
+                <li>جرّب عملية شراء بجنيه واحد قبل ما تنشر الرابط.</li>
+            </ol>
+        </section>
+
+    </main>
+
+    <script src="admin.js"></script>
+</body>
+</html>
