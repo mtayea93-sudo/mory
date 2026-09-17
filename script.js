@@ -45,7 +45,8 @@ async function loadSettings() {
     return {
         ...repo, ...local,
         part2: { ...(repo.part2 || {}), ...(local.part2 || {}) },
-        contact: { ...(repo.contact || {}), ...(local.contact || {}) }
+        contact: { ...(repo.contact || {}), ...(local.contact || {}) },
+        qr: { ...(repo.qr || {}), ...(local.qr || {}) }
     };
 }
 
@@ -311,25 +312,31 @@ async function payWith(method) {
 
     if (!currentItem) currentItem = getItems().part1;
 
-    // الدفع بمسح الكود مباشرة — من غير Paymob
+    // الدفع بمسح كود مولّد تلقائياً من بيانات المحفظة — من غير Paymob
     if (method === 'qr') {
-        const insta = (await Files.get('qr_instapay')) || (await headOk('qr-instapay.jpg') ? 'qr-instapay.jpg' : null);
-        const vod = (await Files.get('qr_vodafone')) || (await headOk('qr-vodafone.jpg') ? 'qr-vodafone.jpg' : null);
-        if (!insta && !vod) {
-            setPayMsg('أكواد التحويل لسه بتتجهز. اطلب نسختك من واتساب وهنرتب معاك الدفع يدوياً.');
+        const s = await loadSettings();
+        const qrCfg = s.qr || {};
+        const hasInsta = !!(qrCfg.instapay && qrCfg.instapay.trim());
+        const hasVod = !!(qrCfg.vodafone && qrCfg.vodafone.trim());
+        // احتياطي: صور أكواد مرفوعة يدوياً زي ما كان قبل كده
+        const imgInsta = !hasInsta && ((await Files.get('qr_instapay')) || (await headOk('qr-instapay.jpg') ? 'qr-instapay.jpg' : null));
+        const imgVod = !hasVod && ((await Files.get('qr_vodafone')) || (await headOk('qr-vodafone.jpg') ? 'qr-vodafone.jpg' : null));
+        if (!hasInsta && !hasVod && !imgInsta && !imgVod) {
+            setPayMsg('بيانات التحويل لسه بتتجهز في لوحة التحكم. اطلب نسختك من واتساب وهنرتب معاك الدفع يدوياً.');
             return;
         }
+        qrState.instapay = hasInsta ? { text: qrCfg.instapay.trim() } : (imgInsta ? { img: imgInsta } : null);
+        qrState.vodafone = hasVod ? { text: qrCfg.vodafone.trim() } : (imgVod ? { img: imgVod } : null);
+
         $('#qrAmount').textContent = currentItem.price;
-        if (insta) {
-            $('#qrInstapayWrap').hidden = false;
-            $('#qrInstapayImg').src = insta instanceof Blob ? URL.createObjectURL(insta) : insta;
-        } else $('#qrInstapayWrap').hidden = true;
-        if (vod) {
-            $('#qrVodafoneWrap').hidden = false;
-            $('#qrVodafoneImg').src = vod instanceof Blob ? URL.createObjectURL(vod) : vod;
-        } else $('#qrVodafoneWrap').hidden = true;
+        const pickInsta = $('#qrPickInstapay');
+        const pickVod = $('#qrPickVodafone');
+        if (pickInsta) pickInsta.hidden = !qrState.instapay;
+        if (pickVod) pickVod.hidden = !qrState.vodafone;
+        $('#qrShow').hidden = true;
+        $('#qrPick').hidden = false;
         $('#qrBox').hidden = false;
-        setPayMsg('امسح الكود وحوّل، وبعدها اضغط تأكيد.', true);
+        setPayMsg('اختار طريقة التحويل وامسح الكود.', true);
         return;
     }
 
@@ -473,15 +480,51 @@ async function handlePaymentReturn() {
 }
 
 // ========== أكواد QR والتواصل ============
-function wireQrConfirm() {
+let qrState = { instapay: null, vodafone: null }; // {text} مولّد أو {img} مرفوع
+
+function showQrMethod(method) {
+    const st = qrState[method];
+    if (!st) return;
+    $('#qrShowMethod').textContent = method === 'instapay' ? 'إنستا باي' : 'فودافون كاش';
+    const canvas = $('#qrCanvas');
+    canvas.innerHTML = '';
+    if (st.img) {
+        const img = document.createElement('img');
+        img.src = st.img instanceof Blob ? URL.createObjectURL(st.img) : st.img;
+        img.alt = 'كود التحويل';
+        img.style.width = '168px';
+        img.style.height = '168px';
+        canvas.appendChild(img);
+        $('#qrRaw').textContent = '';
+    } else if (st.text && window.QRCode) {
+        new QRCode(canvas, { text: st.text, width: 168, height: 168, correctLevel: QRCode.CorrectLevel.M });
+        $('#qrRaw').textContent = st.text;
+    } else {
+        $('#qrRaw').textContent = st.text || '';
+    }
+    $('#qrPick').hidden = true;
+    $('#qrShow').hidden = false;
+}
+
+function wireQr() {
+    const pickInsta = $('#qrPickInstapay');
+    const pickVod = $('#qrPickVodafone');
+    if (pickInsta) pickInsta.addEventListener('click', () => showQrMethod('instapay'));
+    if (pickVod) pickVod.addEventListener('click', () => showQrMethod('vodafone'));
+    const back = $('#qrBackBtn');
+    if (back) back.addEventListener('click', () => {
+        $('#qrShow').hidden = true;
+        $('#qrPick').hidden = false;
+    });
     const btn = $('#qrConfirmBtn');
     if (!btn) return;
     btn.addEventListener('click', () => {
         track('qr_confirm');
         const item = currentItem || getItems().part1;
+        const methodName = $('#qrShowMethod').textContent || 'التحويل';
         const wa = CONFIG.whatsappNumber;
         if (wa) {
-            const msg = `أنا حوّلت مبلغ ${item.price} جنيه عن «${item.name}». الاسم: ${$('#custName').value.trim() || '—'} — ده إشعار التحويل:`;
+            const msg = `أنا حوّلت مبلغ ${item.price} جنيه عن «${item.name}» عن طريق ${methodName}. الاسم: ${$('#custName').value.trim() || '—'} — ده إشعار التحويل:`;
             window.open(`https://wa.me/${wa}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
         } else {
             setPayMsg('احتفظ بإشعار التحويل — هيتم التواصل معاك لتأكيد وإرسال الرواية.');
@@ -609,7 +652,7 @@ function shareOn(network) {
 
     initQuoteSlider();
     initChapterToggle();
-    wireQrConfirm();
+    wireQr();
 
     const items = getItems();
     $('#buyBtn').addEventListener('click', () => { track('buy_open'); openModal(items.part1); });

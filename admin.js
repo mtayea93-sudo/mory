@@ -223,17 +223,6 @@ const IMAGE_BOXES = [
     }
 ];
 
-const QR_BOXES = [
-    {
-        key: 'qr_instapay', repo: 'qr-instapay.jpg', title: 'كود إنستا باي',
-        desc: 'بيظهر في نافذة الشراء عند اختيار «مسح كود تحويل مباشر»'
-    },
-    {
-        key: 'qr_vodafone', repo: 'qr-vodafone.jpg', title: 'كود فودافون كاش',
-        desc: 'بيظهر جنب كود إنستا باي في نافذة الشراء'
-    }
-];
-
 function buildImageBox(cfg, container) {
     const box = document.createElement('div');
     box.className = 'file-box';
@@ -319,8 +308,11 @@ async function initApp() {
     $('#ctEmail').value = c.email || '';
     $('#ctPhone').value = c.phone || '';
 
+    const q = s.qr || {};
+    $('#qrInstapay').value = q.instapay || '';
+    $('#qrVodafone').value = q.vodafone || '';
+
     const refreshers = IMAGE_BOXES.map(cfg => buildImageBox(cfg));
-    refreshers.push(...QR_BOXES.map(cfg => buildImageBox(cfg, '#qrBoxes')));
 
     const refreshP2 = wireFileBox({
         uploadBtn: $('#p2UploadBtn'), fileInput: $('#p2File'),
@@ -345,6 +337,10 @@ async function initApp() {
                 facebook: $('#ctFacebook').value.trim(),
                 email: $('#ctEmail').value.trim(),
                 phone: $('#ctPhone').value.trim()
+            },
+            qr: {
+                instapay: $('#qrInstapay').value.trim(),
+                vodafone: $('#qrVodafone').value.trim()
             }
         });
         $('#saveMsg').textContent = 'اتحفظت! افتح الموقع من نفس المتصفح وهتلاقي التعديلات.';
@@ -365,6 +361,10 @@ async function initApp() {
                 facebook: $('#ctFacebook').value.trim(),
                 email: $('#ctEmail').value.trim(),
                 phone: $('#ctPhone').value.trim()
+            },
+            qr: {
+                instapay: $('#qrInstapay').value.trim(),
+                vodafone: $('#qrVodafone').value.trim()
             }
         };
         const a = document.createElement('a');

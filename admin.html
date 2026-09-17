@@ -434,12 +434,19 @@
             </p>
             <div id="imageBoxes"></div>
 
-            <h3>أكواد الدفع (QR)</h3>
+            <h3>بيانات التحويل المباشر (QR)</h3>
             <p class="adm-note" style="margin-top:0">
-                ارفع كود إنستا باي وكود فودافون كاش اللي بيظهروا للمشتري عشان يمسح ويحوّل مباشرة.
-                بعد الرفع دوس «تنزيل للرفع على GitHub» وارفع الملفات بأسماء <code>qr-instapay.jpg</code> و <code>qr-vodafone.jpg</code>.
+                اكتب لينك إنستا باي ورقم فودافون كاش &mdash; <strong>الموقع بيولّد أكواد QR تلقائياً</strong> والمشتري يمسح ويحوّل على طول.
+                بعد الحفظ دوس «تنزيل settings.json للرفع على GitHub» عشان يظهر لكل الزوار.
             </p>
-            <div id="qrBoxes"></div>
+            <div class="field-row">
+                <label for="qrInstapay">لينك إنستا باي</label>
+                <input type="text" id="qrInstapay" placeholder="https://ipn.eg/..." dir="ltr" style="width:340px">
+            </div>
+            <div class="field-row">
+                <label for="qrVodafone">رقم فودافون كاش</label>
+                <input type="text" id="qrVodafone" placeholder="010xxxxxxxx" dir="ltr" style="width:200px">
+            </div>
 
             <h3>وسائل التواصل</h3>
             <p class="adm-note" style="margin-top:0">

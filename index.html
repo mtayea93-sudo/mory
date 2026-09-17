@@ -246,6 +246,11 @@
                 <img id="p2FrontImg" src="" alt="غلاف الجزء التاني">
             </figure>
 
+            <figure id="backCoverWrap2" class="back-cover" hidden>
+                <img id="p2BackImg" src="" alt="الغلاف الخلفي للجزء التاني">
+                <figcaption>من قلب الغلاف</figcaption>
+            </figure>
+
             <h2 class="section-title" id="part2Title">موري — الجزء التاني</h2>
             <p class="price"><span class="amount" id="part2PriceLabel">100</span> <span class="currency">جنيه</span></p>
             <ul class="included">
@@ -256,11 +261,6 @@
             </ul>
             <button id="buyPart2Btn" class="btn btn-gold btn-big">اشترِ الجزء التاني</button>
             <p class="pay-note">لو حابب تدفع بفودافون كاش أو فوري مباشرة، <a href="#" id="whatsappOrder2">كلمنا على واتساب</a>.</p>
-
-            <figure id="backCoverWrap2" class="back-cover" hidden>
-                <img id="p2BackImg" src="" alt="الغلاف الخلفي للجزء التاني">
-                <figcaption>من قلب الغلاف</figcaption>
-            </figure>
         </div>
     </section>
 
@@ -326,19 +326,33 @@
 
                 <p id="payMsg" class="pay-msg" role="alert"></p>
                 <div id="qrBox" class="qr-box" hidden>
-                    <p class="qr-title">امسح الكود بالتطبيق وحوّل <span id="qrAmount"></span> جنيه مباشرة:</p>
-                    <div class="qr-codes">
-                        <figure class="qr-item" id="qrInstapayWrap" hidden>
-                            <img id="qrInstapayImg" src="" alt="كود إنستا باي للتحويل">
-                            <figcaption>إنستا باي</figcaption>
-                        </figure>
-                        <figure class="qr-item" id="qrVodafoneWrap" hidden>
-                            <img id="qrVodafoneImg" src="" alt="كود فودافون كاش للتحويل">
-                            <figcaption>فودافون كاش</figcaption>
-                        </figure>
+                    <!-- الخطوة 1: اختيار الطريقة -->
+                    <div id="qrPick">
+                        <p class="qr-title">اختار طريقة التحويل — <span id="qrAmount"></span> جنيه:</p>
+                        <div class="qr-pick-row">
+                            <button type="button" class="qr-pick" id="qrPickInstapay">
+                                <span class="qr-pick-name">إنستا باي</span>
+                                <span class="qr-pick-tag">تحويل بنكي فوري</span>
+                            </button>
+                            <button type="button" class="qr-pick" id="qrPickVodafone">
+                                <span class="qr-pick-name">فودافون كاش</span>
+                                <span class="qr-pick-tag">محفظة موبايل</span>
+                            </button>
+                        </div>
                     </div>
-                    <p class="qr-note" id="qrNote">بعد التحويل اضغط «أنا حوّلت» وابعتلي إشعار التحويل على واتساب عشان نبعتلك الرواية فوراً.</p>
-                    <button type="button" class="btn btn-green" id="qrConfirmBtn">أنا حوّلت — تأكيد على واتساب</button>
+                    <!-- الخطوة 2: الكود المولّد -->
+                    <div id="qrShow" hidden>
+                        <p class="qr-title">امسح الكود من تطبيق <span id="qrShowMethod"></span>:</p>
+                        <div class="qr-canvas-wrap">
+                            <div id="qrCanvas"></div>
+                        </div>
+                        <p class="qr-raw" id="qrRaw" dir="ltr"></p>
+                        <p class="qr-note">بعد التحويل اضغط «أنا حوّلت» وابعتلي إشعار التحويل على واتساب عشان نبعتلك الرواية فوراً.</p>
+                        <div class="qr-actions">
+                            <button type="button" class="btn btn-green" id="qrConfirmBtn">أنا حوّلت — تأكيد على واتساب</button>
+                            <button type="button" class="qr-back" id="qrBackBtn">← رجوع لاختيار الطريقة</button>
+                        </div>
+                    </div>
                 </div>
                 <div id="fawryBox" class="fawry-box" hidden>
                     <p>ادفع بالكود ده في أقرب كشك فوري:</p>
@@ -349,7 +363,7 @@
         </div>
     </div>
 
+    <script src="qrcode.min.js"></script>
     <script src="script.js"></script>
-<script src="mtayea-signature.js"></script>
 </body>
 </html>
