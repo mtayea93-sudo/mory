@@ -93,18 +93,19 @@ body {
     background: var(--navy-deep);
 }
 
-.hero-bg {
+/* خلفية أجواء مبهمة من صورة الغلاف */
+.hero-ambience {
     position: absolute;
-    inset: -12% 0;
+    inset: -8%;
     z-index: 0;
-    will-change: transform;
 }
 
-.hero-bg img {
+.hero-ambience img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transform: scale(1.15);
+    filter: blur(38px) brightness(.32) saturate(1.1);
+    transform: scale(1.1);
 }
 
 .hero-shade {
@@ -112,14 +113,42 @@ body {
     inset: 0;
     z-index: 1;
     background:
-        linear-gradient(to top, rgba(10, 16, 24, .96) 0%, rgba(10, 16, 24, .45) 45%, rgba(10, 16, 24, .55) 100%);
+        radial-gradient(ellipse at center, transparent 30%, rgba(10, 16, 24, .55) 100%),
+        linear-gradient(to top, rgba(10, 16, 24, .95) 0%, transparent 35%);
 }
 
-.hero-content {
+.hero-inner {
     position: relative;
     z-index: 2;
-    text-align: center;
-    padding: 90px 20px 120px;
+    width: 100%;
+    max-width: 1020px;
+    padding: 110px 28px 130px;
+    display: grid;
+    grid-template-columns: minmax(230px, 330px) 1fr;
+    gap: clamp(36px, 6vw, 80px);
+    align-items: center;
+}
+
+.hero-book {
+    margin: 0;
+    justify-self: center;
+    will-change: transform;
+}
+
+.hero-book img {
+    width: 100%;
+    max-width: 330px;
+    display: block;
+    border-radius: 4px;
+    border: 1px solid rgba(175, 145, 95, .5);
+    box-shadow:
+        0 40px 80px rgba(0, 0, 0, .7),
+        0 12px 28px rgba(0, 0, 0, .5),
+        inset 0 0 0 1px rgba(246, 239, 224, .06);
+}
+
+.hero-text {
+    text-align: right;
 }
 
 .kicker {
@@ -155,8 +184,8 @@ body {
 
 .hero-cta {
     display: flex;
-    gap: 16px;
-    justify-content: center;
+    gap: 14px;
+    justify-content: flex-start;
     flex-wrap: wrap;
 }
 
@@ -222,7 +251,7 @@ body {
 .seal {
     position: absolute;
     z-index: 3;
-    top: 34px;
+    top: 58px;
     inset-inline-start: 34px;
     width: 118px;
     height: 118px;
@@ -255,6 +284,45 @@ body {
     to { transform: rotate(360deg); }
 }
 
+/* شريط المؤلف العلوي */
+.topbar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 40px;
+    background: rgba(13, 24, 38, .82);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(175, 145, 95, .28);
+}
+
+.topbar-name {
+    font-family: var(--font-head);
+    font-size: .95rem;
+    color: var(--cream);
+    letter-spacing: .02em;
+}
+
+.topbar-heart {
+    width: 13px;
+    height: 13px;
+    fill: var(--amber);
+    animation: heartbeat 2.4s var(--ease-cine) infinite;
+}
+
+@keyframes heartbeat {
+    0%, 28%, 100% { transform: scale(1); }
+    10% { transform: scale(1.35); }
+    18% { transform: scale(1.12); }
+    24% { transform: scale(1.3); }
+}
+
 /* مؤشر النزول */
 .scroll-hint {
     position: absolute;
@@ -272,27 +340,26 @@ body {
     transition: color .3s;
 }
 
-.scroll-hint:hover { color: var(--cream); }
+.scroll-hint:hover { color: var(--gold-bright); }
 
-.scroll-hint i {
+.scroll-arrow {
     display: block;
-    width: 1px;
-    height: 44px;
-    background: linear-gradient(to bottom, transparent, var(--gold));
-    animation: drip 2.2s var(--ease-cine) infinite;
+    width: 30px;
+    height: 30px;
+    color: var(--gold);
+    filter: drop-shadow(0 0 10px rgba(215, 153, 0, .35));
+    animation: arrow-bounce 2.2s var(--ease-cine) infinite;
 }
 
-@keyframes drip {
-    0% { transform: scaleY(0); transform-origin: top; }
-    45% { transform: scaleY(1); transform-origin: top; }
-    55% { transform: scaleY(1); transform-origin: bottom; }
-    100% { transform: scaleY(0); transform-origin: bottom; }
+@keyframes arrow-bounce {
+    0%, 100% { transform: translateY(0); opacity: .85; }
+    50% { transform: translateY(9px); opacity: 1; }
 }
 
 /* ============ المقتبسات ============ */
 .quotes {
     background: var(--navy-deep);
-    padding: 70px 0 90px;
+    padding: 54px 0 66px;
     text-align: center;
 }
 
@@ -315,17 +382,59 @@ body {
     background: linear-gradient(to left, transparent, var(--gold), transparent);
 }
 
-.quotes blockquote {
-    margin: 0 auto 44px;
+.quote-slider {
     max-width: 620px;
+    margin: 0 auto;
+    position: relative;
+    min-height: 120px;
 }
 
-.quotes blockquote:last-child { margin-bottom: 0; }
+.quote-slide {
+    position: absolute;
+    inset: 0;
+    margin: 0 auto;
+    max-width: 620px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity .6s var(--ease-cine), transform .6s var(--ease-cine);
+    pointer-events: none;
+}
 
-.quotes blockquote p {
+.quote-slide.active {
+    position: relative;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+}
+
+.quote-slide p {
     font-family: var(--font-head);
     font-size: clamp(1.4rem, 4.5vw, 1.9rem);
     color: var(--ink);
+}
+
+.quote-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 26px;
+}
+
+.quote-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    border: 1px solid var(--gold);
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    transition: background .3s, transform .3s;
+}
+
+.quote-dot.active {
+    background: var(--amber);
+    border-color: var(--amber);
+    transform: scale(1.25);
 }
 
 .quotes blockquote::before {
@@ -339,7 +448,7 @@ body {
 /* ============ الفصل المجاني (ورقة الكتاب) ============ */
 .preview {
     background: var(--navy-deep);
-    padding: 0 0 80px;
+    padding: 0 0 64px;
 }
 
 .paper {
@@ -383,6 +492,15 @@ body {
     margin-bottom: 30px;
 }
 
+.chapter-text {
+    overflow: hidden;
+    transition: max-height .7s var(--ease-cine);
+}
+
+.chapter-text.collapsed {
+    max-height: 210px;
+}
+
 .chapter-text p {
     margin-bottom: 10px;
     font-size: 1.12rem;
@@ -394,6 +512,15 @@ body {
     position: relative;
     background: linear-gradient(to bottom, transparent, var(--ink) 85%);
     pointer-events: none;
+    transition: opacity .5s;
+}
+
+.paper-fade.hidden-fade {
+    opacity: 0;
+}
+
+#chapterToggle {
+    margin-top: 14px;
 }
 
 .paper-teaser {
@@ -408,10 +535,63 @@ body {
     margin: 0 auto;
 }
 
+/* ============ معرض الأجواء ============ */
+.gallery {
+    background: var(--navy);
+    padding: 64px 0 74px;
+    text-align: center;
+}
+
+.gallery-sub {
+    color: var(--ink-dim);
+    max-width: 520px;
+    margin: -34px auto 44px;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(18px, 3vw, 30px);
+    max-width: 940px;
+    margin: 0 auto;
+}
+
+.gallery-item {
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+    border-radius: 6px;
+    border: 1px solid rgba(175, 145, 95, .4);
+    box-shadow: 0 22px 50px rgba(0, 0, 0, .5);
+}
+
+.gallery-item img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    transition: transform .8s var(--ease-cine);
+}
+
+.gallery-item:hover img { transform: scale(1.05); }
+
+.gallery-item figcaption {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 26px 18px 12px;
+    background: linear-gradient(to top, rgba(8, 14, 22, .92), transparent);
+    color: var(--cream);
+    font-family: var(--font-head);
+    font-size: .98rem;
+    text-align: right;
+}
+
 /* ============ الشراء ============ */
 .buy {
     background: var(--navy);
-    padding: 80px 0 90px;
+    padding: 62px 0 70px;
     text-align: center;
 }
 
@@ -438,7 +618,7 @@ body {
 
 .price .amount {
     font-family: var(--font-display);
-    font-size: clamp(4rem, 14vw, 6.5rem);
+    font-size: clamp(3rem, 9vw, 4.6rem);
     color: var(--amber);
     line-height: 1;
 }
@@ -500,7 +680,7 @@ body {
 /* ============ الجزء التاني ============ */
 .part2 {
     background: var(--navy-ink);
-    padding: 90px 0;
+    padding: 70px 0;
     text-align: center;
 }
 
@@ -510,7 +690,7 @@ body {
     margin-bottom: 8px;
 }
 
-.part2 h2 {
+#part2Pending h2 {
     font-family: var(--font-display);
     font-weight: 700;
     font-size: clamp(2.2rem, 7vw, 3.2rem);
@@ -522,6 +702,61 @@ body {
     color: var(--ink-dim);
     max-width: 480px;
     margin: 0 auto 34px;
+}
+
+/* الجزء التاني لما يبقى متاح */
+.part2-grid {
+    display: grid;
+    grid-template-columns: minmax(200px, 300px) 1fr;
+    gap: clamp(30px, 5vw, 70px);
+    align-items: center;
+    text-align: right;
+}
+
+.part2-grid .part2-mark,
+.part2-grid h2,
+.part2-grid .part2-sub {
+    text-align: right;
+    margin-inline-start: 0;
+}
+
+.part2-grid .part2-sub { margin: 0 0 30px; }
+
+.part2-grid .pay-note { margin-top: 18px; }
+
+.part2-covers {
+    margin: 0;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    justify-self: center;
+}
+
+.part2-covers img {
+    width: 100%;
+    max-width: 210px;
+    border-radius: 4px;
+    border: 1px solid rgba(175, 145, 95, .5);
+    box-shadow: 0 26px 60px rgba(0, 0, 0, .6);
+}
+
+.part2-covers img#p2BackImg { max-width: 170px; }
+
+/* الغلاف الأمامي للجزء التاني — بنفس طراز غلاف الجزء الأول */
+.part2-book {
+    margin: 0 auto 48px;
+}
+
+.part2-book img {
+    width: 100%;
+    max-width: 300px;
+    display: block;
+    border-radius: 4px;
+    border: 1px solid rgba(175, 145, 95, .5);
+    box-shadow:
+        0 40px 80px rgba(0, 0, 0, .7),
+        0 12px 28px rgba(0, 0, 0, .5),
+        inset 0 0 0 1px rgba(246, 239, 224, .06);
 }
 
 .notify-form {
@@ -567,7 +802,7 @@ body {
 /* ============ التذييل ============ */
 .footer {
     background: var(--navy-deep);
-    padding: 56px 0 44px;
+    padding: 46px 0 38px;
     text-align: center;
 }
 
@@ -583,6 +818,39 @@ body {
     justify-content: center;
     align-items: center;
     margin-bottom: 30px;
+}
+
+.social-row {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.social-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid rgba(175, 145, 95, .45);
+    color: var(--gold-bright);
+    transition: background .3s, color .3s, transform .3s, border-color .3s;
+}
+
+.social-icon:hover {
+    background: var(--amber);
+    border-color: var(--amber);
+    color: #16202c;
+    transform: translateY(-3px);
+}
+
+.social-icon svg {
+    width: 19px;
+    height: 19px;
+    fill: currentColor;
 }
 
 .share-link {
@@ -746,6 +1014,60 @@ body {
 
 .pay-msg.ok { color: #4bd598; }
 
+.method-qr {
+    grid-column: 1 / -1;
+    border-color: var(--amber);
+    background: rgba(215, 153, 0, .1);
+}
+
+.qr-box {
+    margin-top: 16px;
+    padding: 18px;
+    border: 1px dashed var(--gold);
+    text-align: center;
+}
+
+.qr-title {
+    color: var(--cream);
+    margin-bottom: 14px;
+}
+
+.qr-codes {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.qr-item {
+    margin: 0;
+}
+
+.qr-item img {
+    display: block;
+    width: 168px;
+    height: 168px;
+    object-fit: contain;
+    background: #fff;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.qr-item figcaption {
+    margin-top: 8px;
+    color: var(--gold-bright);
+    font-family: var(--font-head);
+    font-size: .92rem;
+}
+
+.qr-note {
+    color: var(--ink-dim);
+    font-size: .9rem;
+    max-width: 380px;
+    margin: 0 auto 14px;
+}
+
 .fawry-box {
     margin-top: 16px;
     padding: 18px;
@@ -788,12 +1110,31 @@ body {
 
 /* ============ موبايل ============ */
 @media (max-width: 640px) {
-    .seal {
-        width: 88px;
-        height: 88px;
-        top: 20px;
-        inset-inline-start: 20px;
+    .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 96px 22px 110px;
+        text-align: center;
     }
+
+    .hero-book img { max-width: 210px; }
+
+    .hero-text { text-align: center; }
+
+    .hero-cta { justify-content: center; }
+
+    .seal {
+        width: 76px;
+        height: 76px;
+        top: 50px;
+        inset-inline-start: 16px;
+    }
+
+    .part2-grid { grid-template-columns: 1fr; }
+
+    .part2-covers { justify-content: center; }
+
+    .gallery-grid { grid-template-columns: 1fr; }
 
     .paper { padding: 54px 26px 36px; }
 
@@ -803,4 +1144,9 @@ body {
 
     .notify-form input,
     .notify-form .btn { width: 100%; }
+}
+
+/* أي عنصر عليه خاصية hidden يفضل مخفي مهما كان display بتاعه */
+[hidden] {
+    display: none !important;
 }

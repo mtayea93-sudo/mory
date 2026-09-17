@@ -199,6 +199,110 @@ function wireFileBox({ uploadBtn, fileInput, delBtn, dlBtn, preview, status, idb
     return refresh;
 }
 
+/* ========== صناديق الأغلفة (ديناميكية) ========== */
+const IMAGE_BOXES = [
+    {
+        key: 'cover_hero', repo: 'mory-hero.jpg', title: 'غلاف الموقع (خلفية الواجهة)',
+        desc: 'الصورة اللي ورا عنوان الموقع — يفضل تكون عريضة 1920×1080 أو أكتر', wide: true
+    },
+    {
+        key: 'cover_front1', repo: 'mory-cover.jpg', title: 'الجزء الأول — الغلاف الأمامي',
+        desc: 'بيتعرض ككتاب في الواجهة الرئيسية', fallback: 'mory-cover.jpg'
+    },
+    {
+        key: 'cover_back1', repo: 'mory-back.jpg', title: 'الجزء الأول — الغلاف الخلفي',
+        desc: 'بيتعرض في قسم «النسخة الكاملة»'
+    },
+    {
+        key: 'cover_front2', repo: 'mory2-cover.jpg', title: 'الجزء التاني — الغلاف الأمامي',
+        desc: 'بيتعرض في قسم الجزء التاني لما يتنشر'
+    },
+    {
+        key: 'cover_back2', repo: 'mory2-back.jpg', title: 'الجزء التاني — الغلاف الخلفي',
+        desc: 'بيتعرض جنب الغلاف الأمامي'
+    }
+];
+
+const QR_BOXES = [
+    {
+        key: 'qr_instapay', repo: 'qr-instapay.jpg', title: 'كود إنستا باي',
+        desc: 'بيظهر في نافذة الشراء عند اختيار «مسح كود تحويل مباشر»'
+    },
+    {
+        key: 'qr_vodafone', repo: 'qr-vodafone.jpg', title: 'كود فودافون كاش',
+        desc: 'بيظهر جنب كود إنستا باي في نافذة الشراء'
+    }
+];
+
+function buildImageBox(cfg, container) {
+    const box = document.createElement('div');
+    box.className = 'file-box';
+    box.innerHTML = `
+        <img class="box-preview${cfg.wide ? ' wide' : ''}" src="${cfg.fallback || ''}" alt="${cfg.title}">
+        <div class="file-info">
+            <p class="file-name">${cfg.title}</p>
+            <p class="file-status">${cfg.desc}</p>
+            <div class="file-actions">
+                <button type="button" class="mini-btn up">رفع صورة</button>
+                <input type="file" class="adm-file" accept="image/jpeg,image/png,image/webp">
+                <button type="button" class="mini-btn dl" hidden>تنزيل للرفع على GitHub</button>
+                <button type="button" class="mini-btn danger del" hidden>إلغاء الرفع المحلي</button>
+            </div>
+        </div>`;
+    $(container || '#imageBoxes').appendChild(box);
+
+    const preview = box.querySelector('.box-preview');
+    const status = box.querySelector('.file-status');
+    const fileInput = box.querySelector('input[type=file]');
+    const upBtn = box.querySelector('.up');
+    const dlBtn = box.querySelector('.dl');
+    const delBtn = box.querySelector('.del');
+
+    upBtn.addEventListener('click', () => fileInput.click());
+
+    fileInput.addEventListener('change', async () => {
+        const f = fileInput.files[0];
+        if (!f) return;
+        if (f.size > 2 * 1024 * 1024) { status.textContent = 'الصورة كبيرة — لازم تكون أقل من 2MB.'; return; }
+        await Files.set(cfg.key, f);
+        refresh();
+    });
+
+    delBtn.addEventListener('click', async () => {
+        await Files.del(cfg.key);
+        refresh();
+    });
+
+    dlBtn.addEventListener('click', async () => {
+        const blob = await Files.get(cfg.key);
+        if (!blob) return;
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = cfg.repo;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    });
+
+    async function refresh() {
+        const blob = await Files.get(cfg.key);
+        if (blob) {
+            preview.src = URL.createObjectURL(blob);
+            status.textContent = `صورة مرفوعة محلياً (${(blob.size / 1024).toFixed(0)} KB) — بيظهر في متصفحك فوراً.`;
+            dlBtn.hidden = false;
+            delBtn.hidden = false;
+        } else {
+            preview.src = cfg.fallback || '';
+            preview.style.visibility = cfg.fallback ? 'visible' : 'hidden';
+            status.textContent = cfg.desc;
+            dlBtn.hidden = true;
+            delBtn.hidden = true;
+        }
+    }
+    return refresh;
+}
+
 /* ========== التشغيل ========== */
 async function initApp() {
     renderStats();
@@ -209,19 +313,14 @@ async function initApp() {
     $('#p2Price').value = (s.part2 && s.part2.price) || 100;
     $('#p2Published').checked = !s.part2 || s.part2.published !== false;
 
-    const refreshFront = wireFileBox({
-        uploadBtn: $('#frontUploadBtn'), fileInput: $('#frontFile'),
-        delBtn: $('#frontDel'), dlBtn: $('#frontDl'),
-        preview: $('#frontPreview'), status: $('#frontStatus'),
-        idbKey: 'cover_front', repoName: 'mory-cover.jpg', isImage: true
-    });
+    const c = s.contact || {};
+    $('#ctWhatsapp').value = c.whatsapp || '';
+    $('#ctFacebook').value = c.facebook || '';
+    $('#ctEmail').value = c.email || '';
+    $('#ctPhone').value = c.phone || '';
 
-    const refreshBack = wireFileBox({
-        uploadBtn: $('#backUploadBtn'), fileInput: $('#backFile'),
-        delBtn: $('#backDel'), dlBtn: $('#backDl'),
-        preview: $('#backPreview'), status: $('#backStatus'),
-        idbKey: 'cover_back', repoName: 'mory-back.jpg', isImage: true
-    });
+    const refreshers = IMAGE_BOXES.map(cfg => buildImageBox(cfg));
+    refreshers.push(...QR_BOXES.map(cfg => buildImageBox(cfg, '#qrBoxes')));
 
     const refreshP2 = wireFileBox({
         uploadBtn: $('#p2UploadBtn'), fileInput: $('#p2File'),
@@ -229,10 +328,9 @@ async function initApp() {
         preview: null, status: $('#p2PdfStatus'),
         idbKey: 'pdf_part2', repoName: 'mory2.pdf', isImage: false
     });
+    refreshers.push(refreshP2);
 
-    await refreshFront();
-    await refreshBack();
-    await refreshP2();
+    for (const r of refreshers) await r();
 
     $('#saveSettings').addEventListener('click', () => {
         Settings.save({
@@ -241,10 +339,42 @@ async function initApp() {
                 title: $('#p2Title').value.trim() || 'موري — الجزء التاني',
                 price: Number($('#p2Price').value) || 100,
                 published: $('#p2Published').checked
+            },
+            contact: {
+                whatsapp: $('#ctWhatsapp').value.trim(),
+                facebook: $('#ctFacebook').value.trim(),
+                email: $('#ctEmail').value.trim(),
+                phone: $('#ctPhone').value.trim()
             }
         });
         $('#saveMsg').textContent = 'اتحفظت! افتح الموقع من نفس المتصفح وهتلاقي التعديلات.';
         setTimeout(() => { $('#saveMsg').textContent = ''; }, 5000);
+    });
+
+    $('#dlSettings').addEventListener('click', () => {
+        const cur = Settings.load();
+        const data = {
+            pricePart1: Number($('#setPrice1').value) || 100,
+            part2: {
+                title: $('#p2Title').value.trim() || 'موري — الجزء التاني',
+                price: Number($('#p2Price').value) || 100,
+                published: $('#p2Published').checked
+            },
+            contact: {
+                whatsapp: $('#ctWhatsapp').value.trim(),
+                facebook: $('#ctFacebook').value.trim(),
+                email: $('#ctEmail').value.trim(),
+                phone: $('#ctPhone').value.trim()
+            }
+        };
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+        a.download = 'settings.json';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        $('#saveMsg').textContent = 'اتنزّل ملف settings.json — ارفعه على GitHub بنفس الاسم عشان يظهر لكل الزوار.';
+        setTimeout(() => { $('#saveMsg').textContent = ''; }, 7000);
     });
 
     $('#resetSettings').addEventListener('click', () => {

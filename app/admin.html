@@ -269,6 +269,11 @@
             background: #0a1220;
         }
 
+        .file-box img.wide {
+            width: 170px;
+            height: 96px;
+        }
+
         .file-info { flex: 1; min-width: 200px; }
 
         .file-name {
@@ -422,34 +427,39 @@
                 <span class="unit">جنيه</span>
             </div>
 
-            <h3>الأغلفة</h3>
+            <h3>الأغلفة — خمس صور</h3>
+            <p class="adm-note" style="margin-top:0">
+                <strong>غلاف الموقع</strong> = الخلفية اللي ورا عنوان الموقع (يفضل صورة عريضة 1920&times;1080 أو أكتر).
+                <strong>الأمامي والخلفي</strong> = أغلفة الكتاب نفسه لكل جزء، بتظهر في الواجهة وقسم الشراء.
+            </p>
+            <div id="imageBoxes"></div>
 
-            <div class="file-box">
-                <img id="frontPreview" src="mory-cover.jpg" alt="الغلاف الأمامي">
-                <div class="file-info">
-                    <p class="file-name">الغلاف الأمامي</p>
-                    <p class="file-status" id="frontStatus">الملف الافتراضي: mory-cover.jpg</p>
-                    <div class="file-actions">
-                        <button type="button" class="mini-btn" id="frontUploadBtn">رفع غلاف جديد</button>
-                        <input type="file" class="adm-file" id="frontFile" accept="image/jpeg,image/png,image/webp">
-                        <button type="button" class="mini-btn" id="frontDl" hidden>تنزيل للرفع على GitHub</button>
-                        <button type="button" class="mini-btn danger" id="frontDel" hidden>إلغاء الرفع المحلي</button>
-                    </div>
-                </div>
+            <h3>أكواد الدفع (QR)</h3>
+            <p class="adm-note" style="margin-top:0">
+                ارفع كود إنستا باي وكود فودافون كاش اللي بيظهروا للمشتري عشان يمسح ويحوّل مباشرة.
+                بعد الرفع دوس «تنزيل للرفع على GitHub» وارفع الملفات بأسماء <code>qr-instapay.jpg</code> و <code>qr-vodafone.jpg</code>.
+            </p>
+            <div id="qrBoxes"></div>
+
+            <h3>وسائل التواصل</h3>
+            <p class="adm-note" style="margin-top:0">
+                الأيقونات اللي في آخر الموقع (واتساب، فيسبوك، إيميل، تليفون). سيب أي حقل فاضي وأيقونته مش هتظهر.
+            </p>
+            <div class="field-row">
+                <label for="ctWhatsapp">رقم الواتساب</label>
+                <input type="text" id="ctWhatsapp" placeholder="2010xxxxxxxx" dir="ltr" style="width:220px">
             </div>
-
-            <div class="file-box">
-                <img id="backPreview" src="" alt="الغلاف الخلفي">
-                <div class="file-info">
-                    <p class="file-name">الغلاف الخلفي</p>
-                    <p class="file-status" id="backStatus">مفيش غلاف خلفي معروض حالياً</p>
-                    <div class="file-actions">
-                        <button type="button" class="mini-btn" id="backUploadBtn">رفع غلاف خلفي</button>
-                        <input type="file" class="adm-file" id="backFile" accept="image/jpeg,image/png,image/webp">
-                        <button type="button" class="mini-btn" id="backDl" hidden>تنزيل للرفع على GitHub</button>
-                        <button type="button" class="mini-btn danger" id="backDel" hidden>حذف</button>
-                    </div>
-                </div>
+            <div class="field-row">
+                <label for="ctFacebook">رابط الفيسبوك</label>
+                <input type="text" id="ctFacebook" placeholder="https://facebook.com/..." dir="ltr" style="width:340px">
+            </div>
+            <div class="field-row">
+                <label for="ctEmail">الإيميل</label>
+                <input type="text" id="ctEmail" placeholder="name@email.com" dir="ltr" style="width:280px">
+            </div>
+            <div class="field-row">
+                <label for="ctPhone">رقم التليفون (اتصال)</label>
+                <input type="text" id="ctPhone" placeholder="01xxxxxxxxx" dir="ltr" style="width:200px">
             </div>
 
             <h3>الجزء التاني</h3>
@@ -489,6 +499,7 @@
 
             <div class="save-row">
                 <button type="button" id="saveSettings" class="btn btn-gold">حفظ الإعدادات</button>
+                <button type="button" id="dlSettings" class="btn btn-ghost btn-sm">تنزيل settings.json للرفع على GitHub</button>
                 <button type="button" id="resetSettings" class="btn btn-ghost btn-sm">رجوع للافتراضي</button>
                 <span class="save-msg" id="saveMsg" role="status"></span>
             </div>

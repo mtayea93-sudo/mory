@@ -34,6 +34,21 @@ const Settings = {
     }
 };
 
+// دمج إعدادات GitHub (settings.json) مع إعدادات المتصفح المحلية — المحلي يغلب
+async function loadSettings() {
+    const local = Settings.load();
+    let repo = {};
+    try {
+        const r = await fetch('settings.json', { cache: 'no-store' });
+        if (r.ok) repo = await r.json();
+    } catch (e) { /* مفيش ملف — عادي */ }
+    return {
+        ...repo, ...local,
+        part2: { ...(repo.part2 || {}), ...(local.part2 || {}) },
+        contact: { ...(repo.contact || {}), ...(local.contact || {}) }
+    };
+}
+
 // تخزين الملفات (أغلفة و PDF) في قاعدة بيانات المتصفح
 const Files = (() => {
     let dbPromise = null;
@@ -142,10 +157,10 @@ function getItems() {
     };
 }
 
-// ========== باراللاكس الواجهة ==========
+// ========== حركة الكتاب مع التمرير ==========
 (() => {
-    const bg = $('#heroBg');
-    if (!bg) return;
+    const book = $('.hero-book');
+    if (!book) return;
     let ticking = false;
     window.addEventListener('scroll', () => {
         if (ticking) return;
@@ -153,7 +168,7 @@ function getItems() {
         requestAnimationFrame(() => {
             const y = window.scrollY;
             if (y < window.innerHeight * 1.2) {
-                bg.style.transform = `translateY(${y * 0.28}px)`;
+                book.style.transform = `translateY(${y * 0.08}px)`;
             }
             ticking = false;
         });
@@ -182,22 +197,30 @@ function getItems() {
 let PART2_SOURCE = null; // 'idb' أو 'repo' — مصدر ملف الجزء التاني
 
 async function applySettings() {
-    const s = Settings.load();
+    const s = await loadSettings();
     const items = getItems();
 
     // سعر الجزء الأول
     $('#priceLabel').textContent = items.part1.price;
 
-    // الغلاف الأمامي: المرفوع من اللوحة أولاً، وإلا ملف الموقع
-    const front = await Files.get('cover_front');
-    if (front) $('#heroCoverImg').src = URL.createObjectURL(front);
+    // غلاف الموقع (خلفية الواجهة الأصلية)
+    const heroCover = await Files.get('cover_hero');
+    if (heroCover) $('#heroBgImg').src = URL.createObjectURL(heroCover);
 
-    // الغلاف الخلفي
-    const back = await Files.get('cover_back');
-    const repoBack = back ? true : await headOk('mory-back.jpg');
-    if (back || repoBack) {
+    // غلاف الجزء الأول — الأمامي (مع دعم المفتاح القديم)
+    const front1 = (await Files.get('cover_front1')) || (await Files.get('cover_front'));
+    if (front1) {
+        $('#heroCoverImg').src = URL.createObjectURL(front1);
+        // لو مفيش غلاف موقع مخصص، الأجواء تاخد نفس الغلاف الأمامي
+        if (!heroCover) $('#heroBgImg').src = URL.createObjectURL(front1);
+    }
+
+    // غلاف الجزء الأول — الخلفي
+    const back1 = (await Files.get('cover_back1')) || (await Files.get('cover_back'));
+    const repoBack = back1 ? true : await headOk('mory-back.jpg');
+    if (back1 || repoBack) {
         $('#backCoverWrap').hidden = false;
-        $('#backCoverImg').src = back ? URL.createObjectURL(back) : 'mory-back.jpg';
+        $('#backCoverImg').src = back1 ? URL.createObjectURL(back1) : 'mory-back.jpg';
     }
 
     // الجزء التاني
@@ -210,6 +233,22 @@ async function applySettings() {
         $('#part2Live').hidden = false;
         $('#part2Title').textContent = items.part2.name;
         $('#part2PriceLabel').textContent = items.part2.price;
+
+        // أغلفة الجزء التاني (أمامي وخلفي) — بنفس أسلوب الجزء الأول
+        const front2 = await Files.get('cover_front2');
+        const front2Src = front2 ? URL.createObjectURL(front2)
+            : (await headOk('mory2-cover.jpg') ? 'mory2-cover.jpg' : null);
+        if (front2Src) {
+            $('#part2Covers').hidden = false;
+            $('#p2FrontImg').src = front2Src;
+        }
+        const back2 = await Files.get('cover_back2');
+        const back2Src = back2 ? URL.createObjectURL(back2)
+            : (await headOk('mory2-back.jpg') ? 'mory2-back.jpg' : null);
+        if (back2Src) {
+            $('#backCoverWrap2').hidden = false;
+            $('#p2BackImg').src = back2Src;
+        }
     } else {
         PART2_SOURCE = null;
         $('#part2Pending').hidden = false;
@@ -268,11 +307,34 @@ $$('.method').forEach(btn => {
 
 async function payWith(method) {
     $('#fawryBox').hidden = true;
+    $('#qrBox').hidden = true;
 
     if (!currentItem) currentItem = getItems().part1;
 
+    // الدفع بمسح الكود مباشرة — من غير Paymob
+    if (method === 'qr') {
+        const insta = (await Files.get('qr_instapay')) || (await headOk('qr-instapay.jpg') ? 'qr-instapay.jpg' : null);
+        const vod = (await Files.get('qr_vodafone')) || (await headOk('qr-vodafone.jpg') ? 'qr-vodafone.jpg' : null);
+        if (!insta && !vod) {
+            setPayMsg('أكواد التحويل لسه بتتجهز. اطلب نسختك من واتساب وهنرتب معاك الدفع يدوياً.');
+            return;
+        }
+        $('#qrAmount').textContent = currentItem.price;
+        if (insta) {
+            $('#qrInstapayWrap').hidden = false;
+            $('#qrInstapayImg').src = insta instanceof Blob ? URL.createObjectURL(insta) : insta;
+        } else $('#qrInstapayWrap').hidden = true;
+        if (vod) {
+            $('#qrVodafoneWrap').hidden = false;
+            $('#qrVodafoneImg').src = vod instanceof Blob ? URL.createObjectURL(vod) : vod;
+        } else $('#qrVodafoneWrap').hidden = true;
+        $('#qrBox').hidden = false;
+        setPayMsg('امسح الكود وحوّل، وبعدها اضغط تأكيد.', true);
+        return;
+    }
+
     if (!paymobReady()) {
-        setPayMsg('الدفع الإلكتروني لسه في مرحلة التفعيل. اطلب نسختك من واتساب وهنرتب معاك الدفع يدوياً.');
+        setPayMsg('الدفع الإلكتروني لسه في مرحلة التفعيل. جرّب «مسح كود تحويل مباشر» أو اطلب من واتساب.');
         return;
     }
 
@@ -410,6 +472,81 @@ async function handlePaymentReturn() {
     }
 }
 
+// ========== أكواد QR والتواصل ============
+function wireQrConfirm() {
+    const btn = $('#qrConfirmBtn');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+        track('qr_confirm');
+        const item = currentItem || getItems().part1;
+        const wa = CONFIG.whatsappNumber;
+        if (wa) {
+            const msg = `أنا حوّلت مبلغ ${item.price} جنيه عن «${item.name}». الاسم: ${$('#custName').value.trim() || '—'} — ده إشعار التحويل:`;
+            window.open(`https://wa.me/${wa}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
+        } else {
+            setPayMsg('احتفظ بإشعار التحويل — هيتم التواصل معاك لتأكيد وإرسال الرواية.');
+        }
+    });
+}
+
+// أيقونات التواصل في الفوتر — بتتملي من لوحة التحكم
+function applySocial(s) {
+    const c = s.contact || {};
+    const map = [
+        ['#socialWhatsapp', c.whatsapp ? `https://wa.me/${c.whatsapp.replace(/^\+/, '')}` : ''],
+        ['#socialFacebook', c.facebook || ''],
+        ['#socialEmail', c.email ? `mailto:${c.email}` : ''],
+        ['#socialPhone', c.phone ? `tel:${c.phone}` : '']
+    ];
+    let any = false;
+    for (const [id, href] of map) {
+        const el = $(id);
+        if (!el) continue;
+        if (href) { el.href = href; el.hidden = false; any = true; }
+        else el.hidden = true;
+    }
+    const row = $('#socialRow');
+    if (row) row.hidden = !any;
+    // رقم الواتساب الأساسي للطلبات
+    if (c.whatsapp) CONFIG.whatsappNumber = c.whatsapp.replace(/^\+/, '');
+}
+
+// سلايدر المقتبسات
+function initQuoteSlider() {
+    const slides = $$('.quote-slide');
+    const dots = $$('.quote-dot');
+    if (!slides.length) return;
+    let cur = 0, timer = null;
+    const show = (i) => {
+        slides[cur].classList.remove('active');
+        dots[cur] && dots[cur].classList.remove('active');
+        cur = i;
+        slides[cur].classList.add('active');
+        dots[cur] && dots[cur].classList.add('active');
+    };
+    const auto = () => { timer = setInterval(() => show((cur + 1) % slides.length), 4500); };
+    dots.forEach(d => d.addEventListener('click', () => {
+        clearInterval(timer);
+        show(Number(d.dataset.slide));
+        auto();
+    }));
+    auto();
+}
+
+// فتح وقفل الفصل المجاني
+function initChapterToggle() {
+    const btn = $('#chapterToggle');
+    const text = $('#chapterText');
+    const fade = $('#paperFade');
+    if (!btn || !text) return;
+    btn.addEventListener('click', () => {
+        const collapsed = text.classList.toggle('collapsed');
+        if (fade) fade.classList.toggle('hidden-fade', !collapsed);
+        btn.textContent = collapsed ? 'اقرأ الفصل الأول كامل' : 'اقفل الفصل';
+        if (!collapsed) track('chapter_expand');
+    });
+}
+
 // ========== واتساب ============
 function wireWhatsapp(linkId, itemName) {
     const link = $(linkId);
@@ -467,7 +604,12 @@ function shareOn(network) {
     $('#year').textContent = new Date().getFullYear();
 
     await applySettings();
+    applySocial(await loadSettings());
     await handlePaymentReturn();
+
+    initQuoteSlider();
+    initChapterToggle();
+    wireQrConfirm();
 
     const items = getItems();
     $('#buyBtn').addEventListener('click', () => { track('buy_open'); openModal(items.part1); });
