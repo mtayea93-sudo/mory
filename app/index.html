@@ -102,7 +102,72 @@
 
     <!-- فاصل ورقي ممزق -->
     <svg class="tear" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true">
-        <path fill="#0d1826" d="M0,60 L0,38 L38,30 L72,42 L118,26 L165,40 L210,24 L260,38 L305,28 L352,44 L400,30 L448,40 L495,22 L540,36 L590,26 L640,42 L688,28 L735,38 L780,24 L830,40 L875,28 L925,38 L970,22 L1020,36 L1068,26 L1115,42 L1160,30 L1210,40 L1255,24 L1305,38 L1350,28 L1395,40 L1440,30 L1440,60 Z"></path>
+        <path fill="#101d2c" d="M0,60 L0,38 L38,30 L72,42 L118,26 L165,40 L210,24 L260,38 L305,28 L352,44 L400,30 L448,40 L495,22 L540,36 L590,26 L640,42 L688,28 L735,38 L780,24 L830,40 L875,28 L925,38 L970,22 L1020,36 L1068,26 L1115,42 L1160,30 L1210,40 L1255,24 L1305,38 L1350,28 L1395,40 L1440,30 L1440,60 Z"></path>
+    </svg>
+
+    <!-- ============ الجزء التاني — بنفس طراز الواجهة ============ -->
+    <section class="part2" id="part2">
+        <div class="hero-ambience" aria-hidden="true">
+            <img src="scene-mory.jpg" alt="" id="p2BgImg">
+        </div>
+        <div class="hero-shade" aria-hidden="true"></div>
+
+        <!-- حالة: لسه متنشرش -->
+        <div class="wrap part2-pending reveal" id="part2Pending">
+            <p class="kicker">رواية مصرية &middot; الجزء التاني</p>
+            <h2 class="title part2-title">موري</h2>
+            <p class="tagline">الجزء التاني في مرحلة التجهيز&hellip; سيب رقمك وهنبعتلك إشعار أول ما ينزل.</p>
+            <form id="notifyForm" class="notify-form" novalidate>
+                <label class="sr-only" for="notifyName">الاسم</label>
+                <input type="text" id="notifyName" name="name" placeholder="اسمك" required>
+                <label class="sr-only" for="notifyPhone">رقم الواتساب</label>
+                <input type="tel" id="notifyPhone" name="phone" placeholder="رقم الواتساب" dir="rtl" required>
+                <button type="submit" class="btn btn-gold">نبعتلي إشعار</button>
+            </form>
+            <p id="notifyMsg" class="notify-msg" role="status"></p>
+            <p class="notify-foot">النسخة الحالية تجريبية: التسجيلات بتتحفظ في متصفحك بس، لحد ما نفعّل الاستضافة.</p>
+        </div>
+
+        <!-- حالة: متاح للشراء — بنفس طراز واجهة الجزء الأول -->
+        <div class="wrap" id="part2Live" hidden>
+            <div id="downloadSection2" class="download-banner" hidden>
+                <h2>🎉 شكراً لشرائك!</h2>
+                <p>الجزء التاني جاهز ليك دلوقتي.</p>
+                <a href="#" id="dlPart2" download class="btn btn-green">تحميل الجزء التاني (PDF)</a>
+            </div>
+
+            <div class="part2-hero-grid">
+                <div class="part2-hero-text">
+                    <p class="kicker">رواية مصرية &middot; الجزء التاني</p>
+
+                    <figure id="backCoverWrap2" class="back-cover" hidden>
+                        <img id="p2BackImg" src="" alt="الغلاف الخلفي للجزء التاني">
+                        <figcaption>من قلب الغلاف</figcaption>
+                    </figure>
+
+                    <h2 class="title part2-title" id="part2Title">موري — الجزء التاني</h2>
+                    <p class="author">لـ محمد طايع</p>
+                    <p class="price"><span class="amount" id="part2PriceLabel">100</span> <span class="currency">جنيه</span></p>
+                    <ul class="included">
+                        <li>الجزء التاني كامل &mdash; تكملة الحكاية بصيغة PDF</li>
+                        <li>تحميل فوري بعد الدفع</li>
+                        <li>تدعم القراءة على الموبايل والكمبيوتر والتابلت</li>
+                        <li>دفع آمن بفودافون كاش أو كارت أو إنستا باي أو فوري</li>
+                    </ul>
+                    <button id="buyPart2Btn" class="btn btn-gold btn-big">اشترِ الجزء التاني</button>
+                    <p class="pay-note">لو حابب تدفع بفودافون كاش أو فوري مباشرة، <a href="#" id="whatsappOrder2">كلمنا على واتساب</a>.</p>
+                </div>
+
+                <figure class="hero-book part2-book" id="part2Covers" hidden>
+                    <img id="p2FrontImg" src="" alt="غلاف الجزء التاني">
+                </figure>
+            </div>
+        </div>
+    </section>
+
+    <!-- فاصل ورقي ممزق -->
+    <svg class="tear flip" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true">
+        <path fill="#101d2c" d="M0,60 L0,38 L38,30 L72,42 L118,26 L165,40 L210,24 L260,38 L305,28 L352,44 L400,30 L448,40 L495,22 L540,36 L590,26 L640,42 L688,28 L735,38 L780,24 L830,40 L875,28 L925,38 L970,22 L1020,36 L1068,26 L1115,42 L1160,30 L1210,40 L1255,24 L1305,38 L1350,28 L1395,40 L1440,30 L1440,60 Z"></path>
     </svg>
 
     <!-- ============ مقتبسات ============ -->
@@ -216,53 +281,10 @@
         </div>
     </section>
 
-    <!-- ============ الجزء التاني ============ -->
-    <section class="part2" id="part2">
-        <!-- حالة: لسه متنشرش -->
-        <div class="wrap reveal" id="part2Pending">
-            <p class="part2-mark" aria-hidden="true">❖</p>
-            <h2>الجزء التاني</h2>
-            <p class="part2-sub">في مرحلة التجهيز&hellip; سيب رقمك وهنبعتلك إشعار أول ما ينزل.</p>
-            <form id="notifyForm" class="notify-form" novalidate>
-                <label class="sr-only" for="notifyName">الاسم</label>
-                <input type="text" id="notifyName" name="name" placeholder="اسمك" required>
-                <label class="sr-only" for="notifyPhone">رقم الواتساب</label>
-                <input type="tel" id="notifyPhone" name="phone" placeholder="رقم الواتساب" dir="rtl" required>
-                <button type="submit" class="btn btn-gold">نبعتلي إشعار</button>
-            </form>
-            <p id="notifyMsg" class="notify-msg" role="status"></p>
-            <p class="notify-foot">النسخة الحالية تجريبية: التسجيلات بتتحفظ في متصفحك بس، لحد ما نفعّل الاستضافة.</p>
-        </div>
-
-        <!-- حالة: متاح للشراء — بنفس شكل قسم الجزء الأول -->
-        <div class="wrap" id="part2Live" hidden>
-            <div id="downloadSection2" class="download-banner" hidden>
-                <h2>🎉 شكراً لشرائك!</h2>
-                <p>الجزء التاني جاهز ليك دلوقتي.</p>
-                <a href="#" id="dlPart2" download class="btn btn-green">تحميل الجزء التاني (PDF)</a>
-            </div>
-
-            <figure class="hero-book part2-book" id="part2Covers" hidden>
-                <img id="p2FrontImg" src="" alt="غلاف الجزء التاني">
-            </figure>
-
-            <h2 class="section-title" id="part2Title">موري — الجزء التاني</h2>
-            <p class="price"><span class="amount" id="part2PriceLabel">100</span> <span class="currency">جنيه</span></p>
-            <ul class="included">
-                <li>الجزء التاني كامل &mdash; تكملة الحكاية بصيغة PDF</li>
-                <li>تحميل فوري بعد الدفع</li>
-                <li>تدعم القراءة على الموبايل والكمبيوتر والتابلت</li>
-                <li>دفع آمن بفودافون كاش أو كارت أو إنستا باي أو فوري</li>
-            </ul>
-            <button id="buyPart2Btn" class="btn btn-gold btn-big">اشترِ الجزء التاني</button>
-            <p class="pay-note">لو حابب تدفع بفودافون كاش أو فوري مباشرة، <a href="#" id="whatsappOrder2">كلمنا على واتساب</a>.</p>
-
-            <figure id="backCoverWrap2" class="back-cover" hidden>
-                <img id="p2BackImg" src="" alt="الغلاف الخلفي للجزء التاني">
-                <figcaption>من قلب الغلاف</figcaption>
-            </figure>
-        </div>
-    </section>
+    <!-- فاصل ورقي ممزق -->
+    <svg class="tear" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true">
+        <path fill="#0d1826" d="M0,60 L0,38 L38,30 L72,42 L118,26 L165,40 L210,24 L260,38 L305,28 L352,44 L400,30 L448,40 L495,22 L540,36 L590,26 L640,42 L688,28 L735,38 L780,24 L830,40 L875,28 L925,38 L970,22 L1020,36 L1068,26 L1115,42 L1160,30 L1210,40 L1255,24 L1305,38 L1350,28 L1395,40 L1440,30 L1440,60 Z"></path>
+    </svg>
 
     <!-- ============ التذييل ============ -->
     <footer class="footer">
@@ -326,19 +348,33 @@
 
                 <p id="payMsg" class="pay-msg" role="alert"></p>
                 <div id="qrBox" class="qr-box" hidden>
-                    <p class="qr-title">امسح الكود بالتطبيق وحوّل <span id="qrAmount"></span> جنيه مباشرة:</p>
-                    <div class="qr-codes">
-                        <figure class="qr-item" id="qrInstapayWrap" hidden>
-                            <img id="qrInstapayImg" src="" alt="كود إنستا باي للتحويل">
-                            <figcaption>إنستا باي</figcaption>
-                        </figure>
-                        <figure class="qr-item" id="qrVodafoneWrap" hidden>
-                            <img id="qrVodafoneImg" src="" alt="كود فودافون كاش للتحويل">
-                            <figcaption>فودافون كاش</figcaption>
-                        </figure>
+                    <!-- الخطوة 1: اختيار الطريقة -->
+                    <div id="qrPick">
+                        <p class="qr-title">اختار طريقة التحويل — <span id="qrAmount"></span> جنيه:</p>
+                        <div class="qr-pick-row">
+                            <button type="button" class="qr-pick" id="qrPickInstapay">
+                                <span class="qr-pick-name">إنستا باي</span>
+                                <span class="qr-pick-tag">تحويل بنكي فوري</span>
+                            </button>
+                            <button type="button" class="qr-pick" id="qrPickVodafone">
+                                <span class="qr-pick-name">فودافون كاش</span>
+                                <span class="qr-pick-tag">محفظة موبايل</span>
+                            </button>
+                        </div>
                     </div>
-                    <p class="qr-note" id="qrNote">بعد التحويل اضغط «أنا حوّلت» وابعتلي إشعار التحويل على واتساب عشان نبعتلك الرواية فوراً.</p>
-                    <button type="button" class="btn btn-green" id="qrConfirmBtn">أنا حوّلت — تأكيد على واتساب</button>
+                    <!-- الخطوة 2: الكود المولّد -->
+                    <div id="qrShow" hidden>
+                        <p class="qr-title">امسح الكود من تطبيق <span id="qrShowMethod"></span>:</p>
+                        <div class="qr-canvas-wrap">
+                            <div id="qrCanvas"></div>
+                        </div>
+                        <p class="qr-raw" id="qrRaw" dir="ltr"></p>
+                        <p class="qr-note">بعد التحويل اضغط «أنا حوّلت» وابعتلي إشعار التحويل على واتساب عشان نبعتلك الرواية فوراً.</p>
+                        <div class="qr-actions">
+                            <button type="button" class="btn btn-green" id="qrConfirmBtn">أنا حوّلت — تأكيد على واتساب</button>
+                            <button type="button" class="qr-back" id="qrBackBtn">← رجوع لاختيار الطريقة</button>
+                        </div>
+                    </div>
                 </div>
                 <div id="fawryBox" class="fawry-box" hidden>
                     <p>ادفع بالكود ده في أقرب كشك فوري:</p>
@@ -349,6 +385,7 @@
         </div>
     </div>
 
+    <script src="qrcode.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
