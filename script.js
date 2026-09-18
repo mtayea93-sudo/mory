@@ -242,6 +242,8 @@ async function applySettings() {
         if (front2Src) {
             $('#part2Covers').hidden = false;
             $('#p2FrontImg').src = front2Src;
+            const p2bg = $('#p2BgImg');
+            if (p2bg) p2bg.src = front2Src;
         }
         const back2 = await Files.get('cover_back2');
         const back2Src = back2 ? URL.createObjectURL(back2)
