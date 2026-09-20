@@ -229,7 +229,7 @@
         <div class="wrap">
             <h2 class="section-title reveal">من أجواء الرواية</h2>
             <p class="gallery-sub reveal">مشاهد مرسومة من قلب الحكاية &mdash; أمير وغزل وموري وسرّ المصريّ القديم.</p>
-            <div class="gallery-grid">
+            <div class="gallery-grid" id="galleryGrid">
                 <figure class="gallery-item reveal">
                     <img src="scene-nile.jpg" alt="كافيه على كورنيش النيل عند الغروب — المشهد الأول بين أمير وغزل" loading="lazy">
                     <figcaption>أول لقاء على الكورنيش</figcaption>
@@ -246,6 +246,46 @@
                     <img src="scene-love.jpg" alt="مشوار أمير وغزل على كورنيش النيل وقت المغيب" loading="lazy">
                     <figcaption>مشوار على الكورنيش</figcaption>
                 </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-05.jpg" alt="الشمهدان الأسطوري — موري" loading="lazy">
+                    <figcaption>موري &mdash; الشمهدان الأسطوري</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-06.jpg" alt="الهدية اللي غيّرت كل حاجة" loading="lazy">
+                    <figcaption>الهدية اللي غيّرت كل حاجة</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-07.jpg" alt="لحظة الحرق" loading="lazy">
+                    <figcaption>لحظة الحرق</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-08.jpg" alt="خرابة الدجال" loading="lazy">
+                    <figcaption>خرابة الدجال</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-09.jpg" alt="العمل وعفريته" loading="lazy">
+                    <figcaption>العمل وعفريته</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-10.jpg" alt="لما ظهر الأسد" loading="lazy">
+                    <figcaption>لما ظهر الأسد</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-11.jpg" alt="سهرة على النيل" loading="lazy">
+                    <figcaption>سهرة على النيل</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-12.jpg" alt="فرحة العيلة" loading="lazy">
+                    <figcaption>فرحة العيلة</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-13.jpg" alt="في حواري القاهرة" loading="lazy">
+                    <figcaption>في حواري القاهرة</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-14.jpg" alt="حلم ماما" loading="lazy">
+                    <figcaption>حلم ماما</figcaption>
+                </figure>
             </div>
         </div>
     </section>
@@ -256,6 +296,11 @@
 
     <!-- ============ الشراء ============ -->
     <section class="buy" id="buy">
+        <div class="hero-ambience" aria-hidden="true">
+            <img src="mory-cover.jpg" alt="" id="buyBgImg">
+        </div>
+        <div class="hero-shade" aria-hidden="true"></div>
+
         <div class="wrap">
             <div id="downloadSection" class="download-banner" hidden>
                 <h2>🎉 شكراً لشرائك!</h2>
@@ -263,21 +308,35 @@
                 <a href="mory.pdf" download class="btn btn-green">تحميل الرواية (PDF)</a>
             </div>
 
-            <figure id="backCoverWrap" class="back-cover" hidden>
-                <img id="backCoverImg" src="" alt="الغلاف الخلفي لرواية موري">
-                <figcaption>من قلب الغلاف</figcaption>
-            </figure>
+            <div class="buy-hero-grid">
+                <div class="buy-hero-text">
+                    <p class="kicker reveal">رواية مصرية &middot; الجزء الأول</p>
 
-            <h2 class="section-title reveal">النسخة الكاملة</h2>
-            <p class="price reveal"><span class="amount" id="priceLabel">100</span> <span class="currency">جنيه</span></p>
-            <ul class="included reveal">
-                <li>الرواية كاملة &mdash; 71 صفحة بصيغة PDF</li>
-                <li>تحميل فوري بعد الدفع</li>
-                <li>تدعم القراءة على الموبايل والكمبيوتر والتابلت</li>
-                <li>دفع آمن بفودافون كاش أو كارت أو إنستا باي أو فوري</li>
-            </ul>
-            <button id="buyBtn" class="btn btn-gold btn-big reveal">اشترِ دلوقتي</button>
-            <p class="pay-note reveal">لو حابب تدفع بفودافون كاش أو فوري مباشرة، <a href="#" id="whatsappOrder">كلمنا على واتساب</a>.</p>
+                    <figure id="backCoverWrap" class="back-cover" hidden>
+                        <img id="backCoverImg" src="" alt="الغلاف الخلفي لرواية موري">
+                        <figcaption>من قلب الغلاف</figcaption>
+                    </figure>
+
+                    <h2 class="title buy-title reveal">موري — الجزء الأول</h2>
+                    <p class="author reveal">لـ محمد طايع</p>
+                    <p class="price reveal"><span class="amount" id="priceLabel">100</span> <span class="currency">جنيه</span></p>
+                    <ul class="included reveal">
+                        <li>الرواية كاملة &mdash; 71 صفحة بصيغة PDF</li>
+                        <li>تحميل فوري بعد الدفع</li>
+                        <li>تدعم القراءة على الموبايل والكمبيوتر والتابلت</li>
+                        <li>دفع آمن بفودافون كاش أو كارت أو إنستا باي أو فوري</li>
+                    </ul>
+                    <div class="buy-cta reveal">
+                        <button id="buyBtn" class="btn btn-gold btn-big">اشترِ دلوقتي</button>
+                        <a href="#preview" class="btn btn-ghost btn-big">اقرأ الفصل الأول مجاناً</a>
+                    </div>
+                    <p class="pay-note reveal">لو حابب تدفع بفودافون كاش أو فوري مباشرة، <a href="#" id="whatsappOrder">كلمنا على واتساب</a>.</p>
+                </div>
+
+                <figure class="hero-book buy-book reveal" id="buyCovers">
+                    <img id="buyFrontImg" src="mory-cover.jpg" alt="غلاف رواية موري">
+                </figure>
+            </div>
         </div>
     </section>
 
@@ -387,6 +446,5 @@
 
     <script src="qrcode.min.js"></script>
     <script src="script.js"></script>
-<script src="mtayea-signature.js"></script>
 </body>
 </html>

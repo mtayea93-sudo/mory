@@ -292,6 +292,151 @@ function buildImageBox(cfg, container) {
     return refresh;
 }
 
+/* ========== معرض أجواء الرواية ========== */
+let galleryState = [];
+
+function escAttr(str) {
+    return String(str || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+}
+
+function persistGallery() {
+    const s = Settings.load();
+    s.gallery = galleryState.map(g => ({ id: g.id, img: g.img, caption: g.caption }));
+    Settings.save(s);
+}
+
+function renderGalleryAdmin() {
+    const list = $('#galleryAdminList');
+    list.innerHTML = '';
+
+    if (!galleryState.length) {
+        const p = document.createElement('p');
+        p.className = 'file-status';
+        p.style.marginBottom = '12px';
+        p.textContent = 'لا توجد صور مضافة — المعرض شغال بالصور الافتراضية. اضغط «أضف صورة للمعرض» تحت.';
+        list.appendChild(p);
+        return;
+    }
+
+    galleryState.forEach((g, idx) => {
+        const box = document.createElement('div');
+        box.className = 'file-box';
+        box.innerHTML = `
+            <img class="box-preview wide" alt="صورة ${idx + 1}">
+            <div class="file-info">
+                <p class="file-name">صورة ${idx + 1} من المعرض</p>
+                <p class="file-status g-status">جاري التحميل…</p>
+                <input type="text" class="cap-input" placeholder="وصف الصورة — بيظهر تحتها في الموقع (اختياري)" value="${escAttr(g.caption)}">
+                <div class="file-actions">
+                    <button type="button" class="mini-btn up">رفع صورة</button>
+                    <input type="file" class="adm-file" accept="image/jpeg,image/png,image/webp">
+                    <button type="button" class="mini-btn dl" hidden>تنزيل للرفع على GitHub</button>
+                    <button type="button" class="mini-btn mv-up" ${idx === 0 ? 'disabled' : ''}>↑ تقديم</button>
+                    <button type="button" class="mini-btn mv-dn" ${idx === galleryState.length - 1 ? 'disabled' : ''}>↓ تأخير</button>
+                    <button type="button" class="mini-btn danger del">حذف</button>
+                </div>
+            </div>`;
+        list.appendChild(box);
+
+        const preview = box.querySelector('.box-preview');
+        const status = box.querySelector('.g-status');
+        const fileInput = box.querySelector('input[type=file]');
+        const capInput = box.querySelector('.cap-input');
+        const upBtn = box.querySelector('.up');
+        const dlBtn = box.querySelector('.dl');
+        const delBtn = box.querySelector('.del');
+        const upMove = box.querySelector('.mv-up');
+        const dnMove = box.querySelector('.mv-dn');
+
+        upBtn.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', async () => {
+            const f = fileInput.files[0];
+            if (!f) return;
+            if (f.size > 5 * 1024 * 1024) { status.textContent = 'الصورة كبيرة — لازم تكون أقل من 5MB.'; return; }
+            await Files.set('gallery_' + g.id, f);
+            refreshEntry();
+        });
+
+        dlBtn.addEventListener('click', async () => {
+            const blob = await Files.get('gallery_' + g.id);
+            if (!blob) return;
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = g.img;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+        });
+
+        delBtn.addEventListener('click', async () => {
+            await Files.del('gallery_' + g.id);
+            galleryState.splice(idx, 1);
+            persistGallery();
+            renderGalleryAdmin();
+        });
+
+        upMove.addEventListener('click', () => {
+            if (idx === 0) return;
+            [galleryState[idx - 1], galleryState[idx]] = [galleryState[idx], galleryState[idx - 1]];
+            persistGallery();
+            renderGalleryAdmin();
+        });
+
+        dnMove.addEventListener('click', () => {
+            if (idx === galleryState.length - 1) return;
+            [galleryState[idx + 1], galleryState[idx]] = [galleryState[idx], galleryState[idx + 1]];
+            persistGallery();
+            renderGalleryAdmin();
+        });
+
+        capInput.addEventListener('input', () => {
+            g.caption = capInput.value;
+            persistGallery();
+        });
+
+        async function refreshEntry() {
+            const blob = await Files.get('gallery_' + g.id);
+            if (blob) {
+                preview.src = URL.createObjectURL(blob);
+                preview.style.visibility = 'visible';
+                status.innerHTML = `الاسم على GitHub: <span class="g-repo">${g.img}</span> — مرفوعة في متصفحك (${(blob.size / 1024).toFixed(0)} KB).`;
+                dlBtn.hidden = false;
+            } else {
+                preview.src = '';
+                preview.style.visibility = 'hidden';
+                status.innerHTML = `مفيش صورة لسه — ارفعها هنا، ولما تنزلها على GitHub سمّيها: <span class="g-repo">${g.img}</span>`;
+                dlBtn.hidden = true;
+            }
+        }
+        refreshEntry();
+    });
+}
+
+function wireGalleryAdmin() {
+    const saved = Settings.load().gallery;
+    galleryState = (Array.isArray(saved) ? saved : [])
+        .filter(g => g && g.id)
+        .map(g => ({ id: String(g.id), img: g.img || `gallery-${g.id}.jpg`, caption: g.caption || '' }));
+    renderGalleryAdmin();
+
+    $('#addGalleryImg').addEventListener('click', () => {
+        const id = 'g' + Date.now().toString(36);
+        galleryState.push({ id, img: `gallery-${id}.jpg`, caption: '' });
+        persistGallery();
+        renderGalleryAdmin();
+        const boxes = $('#galleryAdminList').querySelectorAll('.file-box');
+        const last = boxes[boxes.length - 1];
+        if (last) last.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+}
+
+// الصور اللي هتتحفظ/تتنزل في settings.json
+function galleryForSettings() {
+    return galleryState.map(g => ({ id: g.id, img: g.img, caption: g.caption }));
+}
+
 /* ========== التشغيل ========== */
 async function initApp() {
     renderStats();
@@ -311,6 +456,8 @@ async function initApp() {
     const q = s.qr || {};
     $('#qrInstapay').value = q.instapay || '';
     $('#qrVodafone').value = q.vodafone || '';
+
+    wireGalleryAdmin();
 
     const refreshers = IMAGE_BOXES.map(cfg => buildImageBox(cfg));
 
@@ -341,7 +488,8 @@ async function initApp() {
             qr: {
                 instapay: $('#qrInstapay').value.trim(),
                 vodafone: $('#qrVodafone').value.trim()
-            }
+            },
+            gallery: galleryForSettings()
         });
         $('#saveMsg').textContent = 'اتحفظت! افتح الموقع من نفس المتصفح وهتلاقي التعديلات.';
         setTimeout(() => { $('#saveMsg').textContent = ''; }, 5000);
@@ -365,7 +513,8 @@ async function initApp() {
             qr: {
                 instapay: $('#qrInstapay').value.trim(),
                 vodafone: $('#qrVodafone').value.trim()
-            }
+            },
+            gallery: galleryForSettings()
         };
         const a = document.createElement('a');
         a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));

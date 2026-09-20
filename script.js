@@ -197,6 +197,43 @@ function getItems() {
 // ========== تطبيق إعدادات لوحة التحكم ============
 let PART2_SOURCE = null; // 'idb' أو 'repo' — مصدر ملف الجزء التاني
 
+// تأمين النصوص اللي بتتحط في الصفحة
+function escapeHtml(str) {
+    return String(str || '').replace(/[&<>"']/g, c => (
+        { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+    ));
+}
+
+// ========== معرض «من أجواء الرواية» ============
+// لو المؤلف ضاف صور من لوحة التحكم بتبدل الصور الافتراضية
+async function applyGallery(s) {
+    const grid = $('#galleryGrid');
+    if (!grid) return;
+    const list = Array.isArray(s.gallery) ? s.gallery : [];
+    if (!list.length) return; // مفيش صور مضافة — الصور الافتراضية في الـ HTML تفضل شغالة
+
+    const frag = document.createDocumentFragment();
+    let count = 0;
+    for (const g of list) {
+        if (!g || !g.id) continue;
+        const blob = await Files.get('gallery_' + g.id);
+        const src = blob ? URL.createObjectURL(blob)
+            : (g.img && await headOk(g.img) ? g.img : null);
+        if (!src) continue;
+        const cap = (g.caption || '').trim();
+        const fig = document.createElement('figure');
+        fig.className = 'gallery-item';
+        fig.innerHTML = `<img src="${src}" alt="${escapeHtml(cap || 'من أجواء الرواية')}" loading="lazy">` +
+            (cap ? `<figcaption>${escapeHtml(cap)}</figcaption>` : '');
+        frag.appendChild(fig);
+        count++;
+    }
+    if (count) {
+        grid.innerHTML = '';
+        grid.appendChild(frag);
+    }
+}
+
 async function applySettings() {
     const s = await loadSettings();
     const items = getItems();
@@ -212,8 +249,14 @@ async function applySettings() {
     const front1 = (await Files.get('cover_front1')) || (await Files.get('cover_front'));
     if (front1) {
         $('#heroCoverImg').src = URL.createObjectURL(front1);
+        const buyFront = $('#buyFrontImg');
+        if (buyFront) buyFront.src = URL.createObjectURL(front1);
         // لو مفيش غلاف موقع مخصص، الأجواء تاخد نفس الغلاف الأمامي
-        if (!heroCover) $('#heroBgImg').src = URL.createObjectURL(front1);
+        if (!heroCover) {
+            $('#heroBgImg').src = URL.createObjectURL(front1);
+            const buyBg = $('#buyBgImg');
+            if (buyBg) buyBg.src = URL.createObjectURL(front1);
+        }
     }
 
     // غلاف الجزء الأول — الخلفي
@@ -257,6 +300,9 @@ async function applySettings() {
         $('#part2Pending').hidden = false;
         $('#part2Live').hidden = true;
     }
+
+    // صور معرض أجواء الرواية من اللوحة
+    await applyGallery(s);
 }
 
 // ========== نافذة الدفع ============

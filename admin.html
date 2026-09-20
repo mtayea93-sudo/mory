@@ -324,6 +324,44 @@
             display: none;
         }
 
+        .cap-input {
+            width: 100%;
+            max-width: 420px;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            padding: 10px 14px;
+            margin-bottom: 12px;
+            background: rgba(246, 239, 224, .06);
+            border: 1px solid rgba(175, 145, 95, .4);
+            color: var(--ink);
+        }
+
+        .cap-input:focus {
+            outline: none;
+            border-color: var(--gold-bright);
+        }
+
+        .cap-input::placeholder { color: #8d8574; }
+
+        .mini-btn:disabled {
+            opacity: .35;
+            cursor: default;
+        }
+
+        .mini-btn:disabled:hover {
+            background: transparent;
+            color: var(--gold-bright);
+        }
+
+        .g-repo {
+            direction: ltr;
+            display: inline-block;
+            background: rgba(246, 239, 224, .08);
+            padding: 1px 8px;
+            color: var(--cream);
+            font-size: .85rem;
+        }
+
         .save-row {
             margin-top: 26px;
             display: flex;
@@ -510,6 +548,18 @@
                 <button type="button" id="resetSettings" class="btn btn-ghost btn-sm">رجوع للافتراضي</button>
                 <span class="save-msg" id="saveMsg" role="status"></span>
             </div>
+        </section>
+
+        <!-- معرض أجواء الرواية -->
+        <section class="adm-card">
+            <h2>معرض «من أجواء الرواية»</h2>
+            <p class="adm-note" style="margin-top:0">
+                ضيف الصور اللي عايزها وهتظهر في قسم «من أجواء الرواية» في الموقع — ارفع الصورة، اكتب وصفها، وخلاص (الحفظ تلقائي).
+                الصور بتظهر في <strong>متصفحك أنت فوراً</strong>؛ عشان تظهر لكل الزوار: دوس «تنزيل للرفع على GitHub» عند كل صورة وارفعها بالاسم المكتوب جنبها، وبعدين دوس «تنزيل settings.json» وارفعه.
+                لو مفيش صور مضافة، المعرض بيفضل شغال بالصور الافتراضية.
+            </p>
+            <div id="galleryAdminList"></div>
+            <button type="button" id="addGalleryImg" class="mini-btn" style="margin-top:8px">＋ أضف صورة للمعرض</button>
         </section>
 
         <!-- تفعيل الدفع -->
