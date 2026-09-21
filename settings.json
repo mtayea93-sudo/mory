@@ -3,17 +3,17 @@
   "part2": {
     "title": "موري — الجزء التاني",
     "price": 100,
-    "published": false
+    "published": true
   },
   "contact": {
-    "whatsapp": "",
+    "whatsapp": "201060651837",
     "facebook": "https://www.facebook.com/share/19m87y2iD3/",
-    "email": "",
-    "phone": ""
+    "email": "m.tayea93@gmail.com",
+    "phone": "01060651837"
   },
   "qr": {
-    "instapay": "",
-    "vodafone": ""
+    "instapay": "https://ipn.eg/S/m.t93/instapay/9lpf6E",
+    "vodafone": "01060651837"
   },
   "gallery": []
 }
