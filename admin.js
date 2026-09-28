@@ -437,6 +437,27 @@ function galleryForSettings() {
     return galleryState.map(g => ({ id: g.id, img: g.img, caption: g.caption }));
 }
 
+/* ========== صورة كود فودافون كاش المرفوعة ========== */
+function wireQrVodafoneImg() {
+    const input = $('#qrVodafoneImg');
+    const status = $('#qrVodafoneImgStatus');
+    if (!input || !status) return;
+    const refresh = async () => {
+        const blob = await Files.get('qr_vodafone');
+        status.textContent = blob
+            ? '✓ فيه صورة مرفوعة من جهازك — هتظهر مكان الكود المتولّد'
+            : 'مفيش صورة مرفوعة — الموقع هيعرض الكود المتولّد من اللينك/الرقم';
+    };
+    input.addEventListener('change', async () => {
+        const f = input.files && input.files[0];
+        if (!f) return;
+        await Files.set('qr_vodafone', f);
+        input.value = '';
+        await refresh();
+    });
+    refresh();
+}
+
 /* ========== التشغيل ========== */
 async function initApp() {
     renderStats();
@@ -456,6 +477,7 @@ async function initApp() {
     const q = s.qr || {};
     $('#qrInstapay').value = q.instapay || '';
     $('#qrVodafone').value = q.vodafone || '';
+    wireQrVodafoneImg();
 
     wireGalleryAdmin();
 

@@ -46,12 +46,20 @@
     <!-- طبقة حبيبات ورقية فوق الصفحة كلها -->
     <div class="grain" aria-hidden="true"></div>
 
-    <!-- شريط المؤلف العلوي -->
+    <!-- شريط المؤلف العلوي + التنقل -->
     <div class="topbar">
-        <span class="topbar-name">محمد طايع</span>
-        <svg class="topbar-heart" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
-        </svg>
+        <span class="topbar-name">محمد طايع
+            <svg class="topbar-heart" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+            </svg>
+        </span>
+        <nav class="topnav" aria-label="أقسام الموقع">
+            <a href="#buy">شراء الجزء الأول</a>
+            <a href="#part2">شراء الجزء التاني</a>
+            <a href="#quotes">مقتبسات من الرواية</a>
+            <a href="#gallery">من أجواء الرواية</a>
+            <a href="https://wa.me/201060651837?text=%D8%B1%D8%A3%D9%8A%D9%8A%20%D9%8A%D9%87%D9%85%D9%83%20%D9%81%D9%8A%20%D8%B1%D9%88%D8%A7%D9%8A%D8%A9%20%D9%85%D9%88%D8%B1%D9%8A" target="_blank" rel="noopener" class="topnav-feedback">رأيك يهمنا 💬</a>
+        </nav>
     </div>
 
     <!-- ============ الواجهة الرئيسية ============ -->
@@ -170,6 +178,57 @@
         <path fill="#101d2c" d="M0,60 L0,38 L38,30 L72,42 L118,26 L165,40 L210,24 L260,38 L305,28 L352,44 L400,30 L448,40 L495,22 L540,36 L590,26 L640,42 L688,28 L735,38 L780,24 L830,40 L875,28 L925,38 L970,22 L1020,36 L1068,26 L1115,42 L1160,30 L1210,40 L1255,24 L1305,38 L1350,28 L1395,40 L1440,30 L1440,60 Z"></path>
     </svg>
 
+    <!-- ============ الشراء ============ -->
+    <section class="buy" id="buy">
+        <div class="hero-ambience" aria-hidden="true">
+            <img src="mory-cover.jpg" alt="" id="buyBgImg">
+        </div>
+        <div class="hero-shade" aria-hidden="true"></div>
+
+        <div class="wrap">
+            <div id="downloadSection" class="download-banner" hidden>
+                <h2>🎉 شكراً لشرائك!</h2>
+                <p>الرواية كاملة جاهزة ليك دلوقتي.</p>
+                <a href="mory.pdf" download class="btn btn-green">تحميل الرواية (PDF)</a>
+            </div>
+
+            <div class="buy-hero-grid">
+                <div class="buy-hero-text">
+                    <p class="kicker reveal">رواية مصرية &middot; الجزء الأول</p>
+
+                    <figure id="backCoverWrap" class="back-cover" hidden>
+                        <img id="backCoverImg" src="" alt="الغلاف الخلفي لرواية موري">
+                        <figcaption>من قلب الغلاف</figcaption>
+                    </figure>
+
+                    <h2 class="title buy-title reveal">موري — الجزء الأول</h2>
+                    <p class="author reveal">لـ محمد طايع</p>
+                    <p class="price reveal"><span class="amount" id="priceLabel">100</span> <span class="currency">جنيه</span></p>
+                    <ul class="included reveal">
+                        <li>الرواية كاملة &mdash; 71 صفحة بصيغة PDF</li>
+                        <li>تحميل فوري بعد الدفع</li>
+                        <li>تدعم القراءة على الموبايل والكمبيوتر والتابلت</li>
+                        <li>دفع آمن بفودافون كاش أو كارت أو إنستا باي أو فوري</li>
+                    </ul>
+                    <div class="buy-cta reveal">
+                        <button id="buyBtn" class="btn btn-gold btn-big">اشترِ دلوقتي</button>
+                        <a href="#preview" class="btn btn-ghost btn-big">اقرأ الفصل الأول مجاناً</a>
+                    </div>
+                    <p class="pay-note reveal">لو حابب تدفع بفودافون كاش أو فوري مباشرة، <a href="#" id="whatsappOrder">كلمنا على واتساب</a>.</p>
+                </div>
+
+                <figure class="hero-book buy-book reveal" id="buyCovers">
+                    <img id="buyFrontImg" src="mory-cover.jpg" alt="غلاف رواية موري">
+                </figure>
+            </div>
+        </div>
+    </section>
+
+    <!-- فاصل ورقي ممزق -->
+    <svg class="tear" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true">
+        <path fill="#f6efe0" d="M0,60 L0,38 L38,30 L72,42 L118,26 L165,40 L210,24 L260,38 L305,28 L352,44 L400,30 L448,40 L495,22 L540,36 L590,26 L640,42 L688,28 L735,38 L780,24 L830,40 L875,28 L925,38 L970,22 L1020,36 L1068,26 L1115,42 L1160,30 L1210,40 L1255,24 L1305,38 L1350,28 L1395,40 L1440,30 L1440,60 Z"></path>
+    </svg>
+
     <!-- ============ مقتبسات ============ -->
     <section class="quotes" id="quotes">
         <div class="wrap">
@@ -286,6 +345,207 @@
                     <img src="scene-14.jpg" alt="حلم ماما" loading="lazy">
                     <figcaption>حلم ماما</figcaption>
                 </figure>
+
+                <figure class="gallery-item reveal">
+                    <img src="scene-15.jpg" alt="هدية ماما — الشمهدان" loading="lazy">
+                    <figcaption>هدية ماما — الشمهدان</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-16.jpg" alt="أول ليلة مع موري" loading="lazy">
+                    <figcaption>أول ليلة مع موري</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-17.jpg" alt="مصلحي الدجال في مخبئه" loading="lazy">
+                    <figcaption>مصلحي الدجال في مخبئه</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-18.jpg" alt="العفريت بيهمس" loading="lazy">
+                    <figcaption>العفريت بيهمس</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-19.jpg" alt="طقس الحرق على السطح" loading="lazy">
+                    <figcaption>طقس الحرق على السطح</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-20.jpg" alt="الأسد الذهبي يظهر" loading="lazy">
+                    <figcaption>الأسد الذهبي يظهر</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-21.jpg" alt="الأسد يأمر العشرة" loading="lazy">
+                    <figcaption>الأسد يأمر العشرة</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-22.jpg" alt="غروب مع غزل على النيل" loading="lazy">
+                    <figcaption>غروب مع غزل على النيل</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-23.jpg" alt="فرحة العيلة على السطح" loading="lazy">
+                    <figcaption>فرحة العيلة على السطح</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-24.jpg" alt="مشوار في حواري القاهرة" loading="lazy">
+                    <figcaption>مشوار في حواري القاهرة</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-25.jpg" alt="حلم ماما الحنين" loading="lazy">
+                    <figcaption>حلم ماما الحنين</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-26.jpg" alt="الطاولة الملعونة" loading="lazy">
+                    <figcaption>الطاولة الملعونة</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-27.jpg" alt="جري في شوارع القاهرة" loading="lazy">
+                    <figcaption>جري في شوارع القاهرة</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-28.jpg" alt="غضب مصلحي" loading="lazy">
+                    <figcaption>غضب مصلحي</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-29.jpg" alt="الأسد يحمي البيت" loading="lazy">
+                    <figcaption>الأسد يحمي البيت</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-30.jpg" alt="غزل عند النيل" loading="lazy">
+                    <figcaption>غزل عند النيل</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-31.jpg" alt="مكتبة الكتب القديمة" loading="lazy">
+                    <figcaption>مكتبة الكتب القديمة</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-32.jpg" alt="مواجهة منتصف الليل" loading="lazy">
+                    <figcaption>مواجهة منتصف الليل</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-33.jpg" alt="موري المكسور" loading="lazy">
+                    <figcaption>موري المكسور</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-34.jpg" alt="دخان الشفاء" loading="lazy">
+                    <figcaption>دخان الشفاء</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-35.jpg" alt="السوق الليلي" loading="lazy">
+                    <figcaption>السوق الليلي</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-36.jpg" alt="الشيخ والمخطوط" loading="lazy">
+                    <figcaption>الشيخ والمخطوط</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-37.jpg" alt="الأسد فوق القاهرة" loading="lazy">
+                    <figcaption>الأسد فوق القاهرة</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-38.jpg" alt="هروب عند الفجر" loading="lazy">
+                    <figcaption>هروب عند الفجر</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-39.jpg" alt="موري يولد من جديد" loading="lazy">
+                    <figcaption>موري يولد من جديد</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-40.jpg" alt="العاصفة فوق القاهرة" loading="lazy">
+                    <figcaption>العاصفة فوق القاهرة</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-41.jpg" alt="الجمعية السرية" loading="lazy">
+                    <figcaption>الجمعية السرية</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-42.jpg" alt="المرأة الغامضة وشمهدانها" loading="lazy">
+                    <figcaption>المرأة الغامضة وشمهدانها</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-43.jpg" alt="النيل يضيء ذهباً" loading="lazy">
+                    <figcaption>النيل يضيء ذهباً</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-44.jpg" alt="عودة مصلحي" loading="lazy">
+                    <figcaption>عودة مصلحي</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-45.jpg" alt="معركة الأسود" loading="lazy">
+                    <figcaption>معركة الأسود</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-46.jpg" alt="مكتبة المحظورات تحترق" loading="lazy">
+                    <figcaption>مكتبة المحظورات تحترق</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-47.jpg" alt="المهرجان على النيل" loading="lazy">
+                    <figcaption>المهرجان على النيل</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-48.jpg" alt="القطار في منتصف الليل" loading="lazy">
+                    <figcaption>القطار في منتصف الليل</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-49.jpg" alt="بين عالمين" loading="lazy">
+                    <figcaption>بين عالمين</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-50.jpg" alt="المواجهة الأخيرة" loading="lazy">
+                    <figcaption>المواجهة الأخيرة</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-51.jpg" alt="ضريح العيلة" loading="lazy">
+                    <figcaption>ضريح العيلة</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-52.jpg" alt="قمر القلعة" loading="lazy">
+                    <figcaption>قمر القلعة</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-53.jpg" alt="الرسالة القديمة" loading="lazy">
+                    <figcaption>الرسالة القديمة</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-54.jpg" alt="أطفال الحارة والأسود الصغيرة" loading="lazy">
+                    <figcaption>أطفال الحارة والأسود الصغيرة</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-55.jpg" alt="صياد الفجر" loading="lazy">
+                    <figcaption>صياد الفجر</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-56.jpg" alt="المرآة المظلمة" loading="lazy">
+                    <figcaption>المرآة المظلمة</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-57.jpg" alt="حكايات الجدة" loading="lazy">
+                    <figcaption>حكايات الجدة</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-58.jpg" alt="الطريق الصحراوي" loading="lazy">
+                    <figcaption>الطريق الصحراوي</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-59.jpg" alt="الشمهدانان" loading="lazy">
+                    <figcaption>الشمهدانان</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-60.jpg" alt="فجر ما بعد المعركة" loading="lazy">
+                    <figcaption>فجر ما بعد المعركة</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-61.jpg" alt="ورشة النحاس" loading="lazy">
+                    <figcaption>ورشة النحاس</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-62.jpg" alt="نافذة المطر" loading="lazy">
+                    <figcaption>نافذة المطر</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-63.jpg" alt="الباب السري" loading="lazy">
+                    <figcaption>الباب السري</figcaption>
+                </figure>
+                <figure class="gallery-item reveal">
+                    <img src="scene-64.jpg" alt="اللم الشمل الأخير" loading="lazy">
+                    <figcaption>اللم الشمل الأخير</figcaption>
+                </figure>
             </div>
         </div>
     </section>
@@ -294,56 +554,6 @@
         <path fill="#162638" d="M0,60 L0,38 L38,30 L72,42 L118,26 L165,40 L210,24 L260,38 L305,28 L352,44 L400,30 L448,40 L495,22 L540,36 L590,26 L640,42 L688,28 L735,38 L780,24 L830,40 L875,28 L925,38 L970,22 L1020,36 L1068,26 L1115,42 L1160,30 L1210,40 L1255,24 L1305,38 L1350,28 L1395,40 L1440,30 L1440,60 Z"></path>
     </svg>
 
-    <!-- ============ الشراء ============ -->
-    <section class="buy" id="buy">
-        <div class="hero-ambience" aria-hidden="true">
-            <img src="mory-cover.jpg" alt="" id="buyBgImg">
-        </div>
-        <div class="hero-shade" aria-hidden="true"></div>
-
-        <div class="wrap">
-            <div id="downloadSection" class="download-banner" hidden>
-                <h2>🎉 شكراً لشرائك!</h2>
-                <p>الرواية كاملة جاهزة ليك دلوقتي.</p>
-                <a href="mory.pdf" download class="btn btn-green">تحميل الرواية (PDF)</a>
-            </div>
-
-            <div class="buy-hero-grid">
-                <div class="buy-hero-text">
-                    <p class="kicker reveal">رواية مصرية &middot; الجزء الأول</p>
-
-                    <figure id="backCoverWrap" class="back-cover" hidden>
-                        <img id="backCoverImg" src="" alt="الغلاف الخلفي لرواية موري">
-                        <figcaption>من قلب الغلاف</figcaption>
-                    </figure>
-
-                    <h2 class="title buy-title reveal">موري — الجزء الأول</h2>
-                    <p class="author reveal">لـ محمد طايع</p>
-                    <p class="price reveal"><span class="amount" id="priceLabel">100</span> <span class="currency">جنيه</span></p>
-                    <ul class="included reveal">
-                        <li>الرواية كاملة &mdash; 71 صفحة بصيغة PDF</li>
-                        <li>تحميل فوري بعد الدفع</li>
-                        <li>تدعم القراءة على الموبايل والكمبيوتر والتابلت</li>
-                        <li>دفع آمن بفودافون كاش أو كارت أو إنستا باي أو فوري</li>
-                    </ul>
-                    <div class="buy-cta reveal">
-                        <button id="buyBtn" class="btn btn-gold btn-big">اشترِ دلوقتي</button>
-                        <a href="#preview" class="btn btn-ghost btn-big">اقرأ الفصل الأول مجاناً</a>
-                    </div>
-                    <p class="pay-note reveal">لو حابب تدفع بفودافون كاش أو فوري مباشرة، <a href="#" id="whatsappOrder">كلمنا على واتساب</a>.</p>
-                </div>
-
-                <figure class="hero-book buy-book reveal" id="buyCovers">
-                    <img id="buyFrontImg" src="mory-cover.jpg" alt="غلاف رواية موري">
-                </figure>
-            </div>
-        </div>
-    </section>
-
-    <!-- فاصل ورقي ممزق -->
-    <svg class="tear" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true">
-        <path fill="#0d1826" d="M0,60 L0,38 L38,30 L72,42 L118,26 L165,40 L210,24 L260,38 L305,28 L352,44 L400,30 L448,40 L495,22 L540,36 L590,26 L640,42 L688,28 L735,38 L780,24 L830,40 L875,28 L925,38 L970,22 L1020,36 L1068,26 L1115,42 L1160,30 L1210,40 L1255,24 L1305,38 L1350,28 L1395,40 L1440,30 L1440,60 Z"></path>
-    </svg>
 
     <!-- ============ التذييل ============ -->
     <footer class="footer">
@@ -446,7 +656,5 @@
 
     <script src="qrcode.min.js"></script>
     <script src="script.js"></script>
-<script src="mtayea-signature.js"></script>
-<script src="https://m-tayea.mtayea.com/signature/mtayea-track.js" data-site="mory" defer></script>
 </body>
 </html>

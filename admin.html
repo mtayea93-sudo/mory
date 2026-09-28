@@ -474,7 +474,7 @@
 
             <h3>بيانات التحويل المباشر (QR)</h3>
             <p class="adm-note" style="margin-top:0">
-                اكتب لينك إنستا باي ورقم فودافون كاش &mdash; <strong>الموقع بيولّد أكواد QR تلقائياً</strong> والمشتري يمسح ويحوّل على طول.
+                اكتب لينك إنستا باي ورقم فودافون كاش (أو لينك فودافون كاش) &mdash; <strong>الموقع بيولّد أكواد QR تلقائياً</strong> والمشتري يمسح ويحوّل على طول.
                 بعد الحفظ دوس «تنزيل settings.json للرفع على GitHub» عشان يظهر لكل الزوار.
             </p>
             <div class="field-row">
@@ -482,9 +482,17 @@
                 <input type="text" id="qrInstapay" placeholder="https://ipn.eg/..." dir="ltr" style="width:340px">
             </div>
             <div class="field-row">
-                <label for="qrVodafone">رقم فودافون كاش</label>
-                <input type="text" id="qrVodafone" placeholder="010xxxxxxxx" dir="ltr" style="width:200px">
+                <label for="qrVodafone">رقم فودافون كاش أو اللينك</label>
+                <input type="text" id="qrVodafone" placeholder="010xxxxxxxx أو http://vf.eg/..." dir="ltr" style="width:340px">
             </div>
+            <div class="field-row">
+                <label for="qrVodafoneImg">صورة كود فودافون كاش</label>
+                <input type="file" id="qrVodafoneImg" accept="image/*">
+                <small id="qrVodafoneImgStatus" style="color:#8fa3b8"></small>
+            </div>
+            <p class="adm-note" style="margin-top:0">
+                لو رفعت صورة الكود الرسمي من تطبيق فودافون كاش، <strong>هيظهر هي هي</strong> (مش كود متولّد) واللينك/الرقم اللي فوق هيظهر تحتها.
+            </p>
 
             <h3>وسائل التواصل</h3>
             <p class="adm-note" style="margin-top:0">

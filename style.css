@@ -27,7 +27,7 @@
 
 html {
     scroll-behavior: smooth;
-    scroll-padding-top: 20px;
+    scroll-padding-top: 64px;
 }
 
 body {
@@ -293,10 +293,11 @@ body {
     z-index: 40;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 8px;
-    height: 40px;
-    background: rgba(13, 24, 38, .82);
+    justify-content: space-between;
+    gap: 12px;
+    height: 46px;
+    padding: 0 clamp(12px, 3vw, 28px);
+    background: rgba(13, 24, 38, .88);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border-bottom: 1px solid rgba(175, 145, 95, .28);
@@ -307,6 +308,10 @@ body {
     font-size: .95rem;
     color: var(--cream);
     letter-spacing: .02em;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
 }
 
 .topbar-heart {
@@ -314,6 +319,54 @@ body {
     height: 13px;
     fill: var(--amber);
     animation: heartbeat 2.4s var(--ease-cine) infinite;
+}
+
+.topnav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.topnav::-webkit-scrollbar { display: none; }
+
+.topnav a {
+    font-family: var(--font-ui);
+    font-size: .82rem;
+    color: var(--ink);
+    text-decoration: none;
+    white-space: nowrap;
+    padding: 6px 11px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    transition: color .25s, border-color .25s, background .25s;
+}
+
+.topnav a:hover {
+    color: var(--gold);
+    border-color: rgba(175, 145, 95, .5);
+    background: rgba(175, 145, 95, .08);
+}
+
+.topnav a.topnav-feedback {
+    color: var(--navy-deep);
+    background: var(--gold);
+    font-weight: 700;
+    margin-inline-start: 4px;
+}
+
+.topnav a.topnav-feedback:hover {
+    background: var(--cream);
+    color: var(--navy-deep);
+}
+
+@media (max-width: 720px) {
+    .topbar { height: auto; min-height: 46px; flex-wrap: wrap; padding: 6px 10px; row-gap: 2px; }
+    .topnav { order: 2; width: 100%; justify-content: flex-start; }
+    .topnav a { font-size: .78rem; padding: 5px 9px; }
+    html { scroll-padding-top: 104px; }
 }
 
 @keyframes heartbeat {

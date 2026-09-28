@@ -241,9 +241,10 @@ async function applySettings() {
     // سعر الجزء الأول
     $('#priceLabel').textContent = items.part1.price;
 
-    // غلاف الموقع (خلفية الواجهة الأصلية)
+    // غلاف الموقع (خلفية الواجهة الأصلية) — مرفوع من اللوحة أو ملف mory-hero.jpg المرفوع على الموقع
     const heroCover = await Files.get('cover_hero');
     if (heroCover) $('#heroBgImg').src = URL.createObjectURL(heroCover);
+    else if (await headOk('mory-hero.jpg')) $('#heroBgImg').src = 'mory-hero.jpg';
 
     // غلاف الجزء الأول — الأمامي (مع دعم المفتاح القديم)
     const front1 = (await Files.get('cover_front1')) || (await Files.get('cover_front'));
@@ -367,14 +368,15 @@ async function payWith(method) {
         const hasInsta = !!(qrCfg.instapay && qrCfg.instapay.trim());
         const hasVod = !!(qrCfg.vodafone && qrCfg.vodafone.trim());
         // احتياطي: صور أكواد مرفوعة يدوياً زي ما كان قبل كده
-        const imgInsta = !hasInsta && ((await Files.get('qr_instapay')) || (await headOk('qr-instapay.jpg') ? 'qr-instapay.jpg' : null));
-        const imgVod = !hasVod && ((await Files.get('qr_vodafone')) || (await headOk('qr-vodafone.jpg') ? 'qr-vodafone.jpg' : null));
+        // صور أكواد مرفوعة يدوياً ليها أولوية العرض، والنص (رقم/لينك) يظهر تحتها
+        const imgInsta = (await Files.get('qr_instapay')) || (await headOk('qr-instapay.jpg') ? 'qr-instapay.jpg' : null);
+        const imgVod = (await Files.get('qr_vodafone')) || (await headOk('vodafone-qr.jpg') ? 'vodafone-qr.jpg' : (await headOk('qr-vodafone.jpg') ? 'qr-vodafone.jpg' : null));
         if (!hasInsta && !hasVod && !imgInsta && !imgVod) {
             setPayMsg('بيانات التحويل لسه بتتجهز في لوحة التحكم. اطلب نسختك من واتساب وهنرتب معاك الدفع يدوياً.');
             return;
         }
-        qrState.instapay = hasInsta ? { text: qrCfg.instapay.trim() } : (imgInsta ? { img: imgInsta } : null);
-        qrState.vodafone = hasVod ? { text: qrCfg.vodafone.trim() } : (imgVod ? { img: imgVod } : null);
+        qrState.instapay = (hasInsta || imgInsta) ? { text: hasInsta ? qrCfg.instapay.trim() : '', img: imgInsta } : null;
+        qrState.vodafone = (hasVod || imgVod) ? { text: hasVod ? qrCfg.vodafone.trim() : '', img: imgVod } : null;
 
         $('#qrAmount').textContent = currentItem.price;
         const pickInsta = $('#qrPickInstapay');
@@ -543,7 +545,7 @@ function showQrMethod(method) {
         img.style.width = '168px';
         img.style.height = '168px';
         canvas.appendChild(img);
-        $('#qrRaw').textContent = '';
+        $('#qrRaw').textContent = st.text || '';
     } else if (st.text && window.QRCode) {
         new QRCode(canvas, { text: st.text, width: 168, height: 168, correctLevel: QRCode.CorrectLevel.M });
         $('#qrRaw').textContent = st.text;
