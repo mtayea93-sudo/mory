@@ -607,8 +607,15 @@ function applySocial(s) {
 // سلايدر المقتبسات
 function initQuoteSlider() {
     const slides = $$('.quote-slide');
-    const dots = $$('.quote-dot');
     if (!slides.length) return;
+    // توليد النقط تلقائياً بعدد المقتبسات
+    const dotsWrap = $('.quote-dots');
+    if (dotsWrap) {
+        dotsWrap.innerHTML = Array.from(slides).map((_, i) =>
+            `<button type="button" class="quote-dot${i === 0 ? ' active' : ''}" data-slide="${i}" aria-label="مقتبس ${i + 1}"></button>`
+        ).join('');
+    }
+    const dots = $$('.quote-dot');
     let cur = 0, timer = null;
     const show = (i) => {
         slides[cur].classList.remove('active');

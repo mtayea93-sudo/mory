@@ -462,13 +462,23 @@ body {
 
 .quote-slide p {
     font-family: var(--font-head);
-    font-size: clamp(1.4rem, 4.5vw, 1.9rem);
+    font-size: clamp(1.15rem, 3.8vw, 1.7rem);
     color: var(--ink);
+    line-height: 1.9;
+}
+
+.quote-slide footer {
+    margin-top: 14px;
+    font-family: var(--font-ui);
+    font-size: .85rem;
+    color: var(--gold);
+    opacity: .85;
 }
 
 .quote-dots {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
     gap: 10px;
     margin-top: 26px;
 }
