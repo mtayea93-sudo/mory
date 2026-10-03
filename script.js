@@ -39,7 +39,7 @@ async function loadSettings() {
     const local = Settings.load();
     let repo = {};
     try {
-        const r = await fetch('settings.json', { cache: 'no-store' });
+        const r = await fetch('settings.json', { cache: 'no-store', signal: AbortSignal.timeout ? AbortSignal.timeout(6000) : undefined });
         if (r.ok) repo = await r.json();
     } catch (e) { /* مفيش ملف — عادي */ }
     return {
@@ -82,6 +82,7 @@ const Files = (() => {
                     const req = tx.objectStore('files').get(key);
                     req.onsuccess = () => resolve(req.result || null);
                     req.onerror = () => resolve(null);
+                    setTimeout(() => resolve(null), 3000);
                 });
             } catch (e) { return null; }
         },
@@ -101,7 +102,7 @@ const Files = (() => {
 // هل ملف موجود في مجلد الموقع على GitHub؟
 async function headOk(path) {
     try {
-        const r = await fetch(path, { method: 'HEAD' });
+        const r = await fetch(path, { method: 'HEAD', signal: AbortSignal.timeout ? AbortSignal.timeout(5000) : undefined });
         return r.ok;
     } catch (e) { return false; }
 }
@@ -354,6 +355,18 @@ document.addEventListener('keydown', (e) => {
 $$('.method').forEach(btn => {
     btn.addEventListener('click', () => payWith(btn.dataset.method));
 });
+
+// ربط أزرار الشراء فوراً — من غير ما نستنى تحميل الإعدادات أو الأغلفة
+// (عشان الزرار يفضل شغال حتى لو طلب بطيء أو قاطع)
+(function wireBuyButtons() {
+    const go = (id, itemId) => {
+        const el = $(id);
+        if (!el) return;
+        el.addEventListener('click', () => { track('buy_open'); openModal(getItems()[itemId]); });
+    };
+    go('#buyBtn', 'part1');
+    go('#buyPart2Btn', 'part2');
+})();
 
 async function payWith(method) {
     $('#fawryBox').hidden = true;
@@ -712,9 +725,6 @@ function shareOn(network) {
     wireQr();
 
     const items = getItems();
-    $('#buyBtn').addEventListener('click', () => { track('buy_open'); openModal(items.part1); });
-    const buy2 = $('#buyPart2Btn');
-    if (buy2) buy2.addEventListener('click', () => { track('buy_open'); openModal(items.part2); });
 
     // تتبع فتح الفصل المجاني للقراءة
     if ('IntersectionObserver' in window && $('#preview')) {
