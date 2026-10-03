@@ -12,7 +12,7 @@
     "phone": ""
   },
   "qr": {
-    "instapay": "",
+    "instapay": "https://ipn.eg/S/m.t93/instapay/9lpf6E",
     "vodafone": "http://vf.eg/vfcash?id=mt&qrId=ACo42h"
   },
   "gallery": []
