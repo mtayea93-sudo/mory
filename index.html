@@ -21,6 +21,16 @@
     <meta name="twitter:image" content="https://mtayea.com/mory-cover.jpg">
 
     <link rel="icon" type="image/jpeg" href="mory-cover.jpg">
+
+    <!-- تطبيق ويب (PWA) — يتثبت على الموبايل -->
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#0d1826">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="موري">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
@@ -708,5 +718,13 @@
     <script src="qrcode.min.js"></script>
     <script src="script.js"></script>
 <script src="mtayea-signature.js"></script>
+<script>
+// تسجيل الـ Service Worker — ضروري عشان الموقع يتثبت كتطبيق ويشتغل أوفلاين
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(() => { /* متاحش — الموقع يشتغل عادي */ });
+    });
+}
+</script>
 </body>
 </html>

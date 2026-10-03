@@ -1,0 +1,31 @@
+{
+  "name": "موري — رواية محمد طايع",
+  "short_name": "موري",
+  "description": "رواية موري للكاتب محمد طايع — اقرأ الفصل الأول مجاناً واشترِ النسخة الكاملة",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0d1826",
+  "theme_color": "#0d1826",
+  "categories": ["books", "entertainment"],
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "شراء الجزء الأول",
+      "url": "/?source=pwa#buy",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "قراءة الفصل الأول مجاناً",
+      "url": "/?source=pwa#preview",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
