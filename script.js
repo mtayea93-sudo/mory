@@ -368,6 +368,9 @@ $$('.method').forEach(btn => {
     go('#buyPart2Btn', 'part2');
 })();
 
+// ربط أزرار اختيار الكود والتأكيد فوراً برضه — نفس السبب
+wireQr();
+
 async function payWith(method) {
     $('#fawryBox').hidden = true;
     $('#qrBox').hidden = true;
@@ -722,7 +725,6 @@ function shareOn(network) {
 
     initQuoteSlider();
     initChapterToggle();
-    wireQr();
 
     const items = getItems();
 
