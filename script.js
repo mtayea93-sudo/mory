@@ -242,13 +242,23 @@ async function applySettings() {
     // سعر الجزء الأول
     $('#priceLabel').textContent = items.part1.price;
 
+    // كل الاستعلامات بتشتغل بالتوازي من أول لحظة — صفحة أسرع بكتير مع ضعف النت
+    const [heroCover, headHero, front1a, front1b, back1a, back1b, headBack, idbPdf, headPdf,
+           front2a, head2cov, back2a, head2back] = await Promise.all([
+        Files.get('cover_hero'), headOk('mory-hero.jpg'),
+        Files.get('cover_front1'), Files.get('cover_front'),
+        Files.get('cover_back1'), Files.get('cover_back'), headOk('mory-back.jpg'),
+        Files.get('pdf_part2'), headOk('mory2.pdf'),
+        Files.get('cover_front2'), headOk('mory2-cover.jpg'),
+        Files.get('cover_back2'), headOk('mory2-back.jpg')
+    ]);
+
     // غلاف الموقع (خلفية الواجهة الأصلية) — مرفوع من اللوحة أو ملف mory-hero.jpg المرفوع على الموقع
-    const heroCover = await Files.get('cover_hero');
     if (heroCover) $('#heroBgImg').src = URL.createObjectURL(heroCover);
-    else if (await headOk('mory-hero.jpg')) $('#heroBgImg').src = 'mory-hero.jpg';
+    else if (headHero) $('#heroBgImg').src = 'mory-hero.jpg';
 
     // غلاف الجزء الأول — الأمامي (مع دعم المفتاح القديم)
-    const front1 = (await Files.get('cover_front1')) || (await Files.get('cover_front'));
+    const front1 = front1a || front1b;
     if (front1) {
         $('#heroCoverImg').src = URL.createObjectURL(front1);
         const buyFront = $('#buyFrontImg');
@@ -262,8 +272,8 @@ async function applySettings() {
     }
 
     // غلاف الجزء الأول — الخلفي
-    const back1 = (await Files.get('cover_back1')) || (await Files.get('cover_back'));
-    const repoBack = back1 ? true : await headOk('mory-back.jpg');
+    const back1 = back1a || back1b;
+    const repoBack = back1 ? true : headBack;
     if (back1 || repoBack) {
         $('#backCoverWrap').hidden = false;
         $('#backCoverImg').src = back1 ? URL.createObjectURL(back1) : 'mory-back.jpg';
@@ -271,8 +281,7 @@ async function applySettings() {
 
     // الجزء التاني
     const published = !s.part2 || s.part2.published !== false;
-    const idbPdf = await Files.get('pdf_part2');
-    const repoPdf = idbPdf ? true : await headOk('mory2.pdf');
+    const repoPdf = idbPdf ? true : headPdf;
     if (published && (idbPdf || repoPdf)) {
         PART2_SOURCE = idbPdf ? 'idb' : 'repo';
         $('#part2Pending').hidden = true;
@@ -281,18 +290,16 @@ async function applySettings() {
         $('#part2PriceLabel').textContent = items.part2.price;
 
         // أغلفة الجزء التاني (أمامي وخلفي) — بنفس أسلوب الجزء الأول
-        const front2 = await Files.get('cover_front2');
-        const front2Src = front2 ? URL.createObjectURL(front2)
-            : (await headOk('mory2-cover.jpg') ? 'mory2-cover.jpg' : null);
+        const front2Src = front2a ? URL.createObjectURL(front2a)
+            : (head2cov ? 'mory2-cover.jpg' : null);
         if (front2Src) {
             $('#part2Covers').hidden = false;
             $('#p2FrontImg').src = front2Src;
             const p2bg = $('#p2BgImg');
             if (p2bg) p2bg.src = front2Src;
         }
-        const back2 = await Files.get('cover_back2');
-        const back2Src = back2 ? URL.createObjectURL(back2)
-            : (await headOk('mory2-back.jpg') ? 'mory2-back.jpg' : null);
+        const back2Src = back2a ? URL.createObjectURL(back2a)
+            : (head2back ? 'mory2-back.jpg' : null);
         if (back2Src) {
             $('#backCoverWrap2').hidden = false;
             $('#p2BackImg').src = back2Src;
@@ -384,9 +391,14 @@ async function payWith(method) {
         const hasInsta = !!(qrCfg.instapay && qrCfg.instapay.trim());
         const hasVod = !!(qrCfg.vodafone && qrCfg.vodafone.trim());
         // احتياطي: صور أكواد مرفوعة يدوياً زي ما كان قبل كده
+        // بنجري كل الاستعلامات بالتوازي عشان ضعف النت مايعطلش فتح الكود
         // صور أكواد مرفوعة يدوياً ليها أولوية العرض، والنص (رقم/لينك) يظهر تحتها
-        const imgInsta = (await Files.get('qr_instapay')) || (await headOk('qr-instapay.jpg') ? 'qr-instapay.jpg' : null);
-        const imgVod = (await Files.get('qr_vodafone')) || (await headOk('vodafone-qr.jpg') ? 'vodafone-qr.jpg' : (await headOk('qr-vodafone.jpg') ? 'qr-vodafone.jpg' : null));
+        const [fileInsta, fileVod, headInsta, headVod, headVod2] = await Promise.all([
+            Files.get('qr_instapay'), Files.get('qr_vodafone'),
+            headOk('qr-instapay.jpg'), headOk('vodafone-qr.jpg'), headOk('qr-vodafone.jpg')
+        ]);
+        const imgInsta = fileInsta || (headInsta ? 'qr-instapay.jpg' : null);
+        const imgVod = fileVod || (headVod ? 'vodafone-qr.jpg' : (headVod2 ? 'qr-vodafone.jpg' : null));
         if (!hasInsta && !hasVod && !imgInsta && !imgVod) {
             setPayMsg('بيانات التحويل لسه بتتجهز في لوحة التحكم. اطلب نسختك من واتساب وهنرتب معاك الدفع يدوياً.');
             return;
