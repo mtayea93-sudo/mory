@@ -5,7 +5,7 @@
    غيّر الكلمة قبل ما تنشر الموقع.
    ========================================================== */
 
-const ADMIN_PASSWORD = 'mory-2026'; // غيّرها من هنا
+const ADMIN_PASSWORD = 'mhmd@1993'; // الباسورد الموحّد
 
 const $ = (s) => document.querySelector(s);
 
